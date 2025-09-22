@@ -1,5 +1,6 @@
 #ifndef TADS
 #define TADS
+#define CAP 10
 #define MAX 101
 
 typedef struct {
@@ -8,9 +9,8 @@ typedef struct {
 } Paciente;
 
 //Pilha será usada para o histórico dos pacientes
-//ATENÇÃO: preciso ajustar a Pilha de acordo com os requisitos do pdf (preciso entender melhor o que ele quer dizer tbm kk)
 typedef struct Pilha {
-    char *procedimentos[MAX]; //vetor de string de até 100 chars
+    char procedimentos[CAP][MAX]; //vetor de 10 strings de até 100 chars
     int size;
 } Pilha;
 
@@ -44,13 +44,13 @@ void nodeApagar(Node *n);
 
 //funções de Pilha
 
-Pilha *pilhaCriar(char *proc[MAX]);
-void pilhaApagar(Pilha *pi);
+Pilha *pilhaCriar();
+void pilhaApagar(Pilha *h);
 
-void empilhar(Pilha *pi, Node *n);
-Node desempilhar(Pilha *pi);
-int pilhaSize(Pilha *pi);
-bool pilhaVazia(Pilha *pi);
+void empilhar(Pilha *h, char proc[MAX]);
+bool desempilhar(Pilha *h, char *removido[MAX]);
+int pilhaSize(Pilha *h);
+bool pilhaVazia(Pilha *h);
 
 
 //funções de Fila
@@ -61,7 +61,7 @@ void filaApagar(Fila *f);
 int filaSize(Fila *f);
 bool filaVazia(Fila *f);
 void queue(Fila *f, Node *n);
-Node dequeue(Fila *f, Node *n);
+bool dequeue(Fila *f, Node *removido);
 
 
 #endif

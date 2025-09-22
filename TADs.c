@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
 #include "TADs.h"
 
@@ -39,13 +40,46 @@ void nodeApagar(Node *n) {
 
 //funções de Pilha (histórico)
 
-Pilha *pilhaCriar(char *proc[MAX]);
-void pilhaApagar(Pilha *h);
+Pilha *pilhaCriar() {
+    Pilha *h = (Pilha *)malloc(sizeof(Pilha));
+    memset(h->procedimentos, 0, sizeof(h->procedimentos)); //garantir que o vetor começa zerado, possivelmente desenecessário, talvez retire depois
+    h->size = 0;
 
-void empilhar(Pilha *pi, Node *n);
-Node desempilhar(Pilha *pi);
-int pilhaSize(Pilha *pi);
-bool pilhaVazia(Pilha *pi);
+    return h;
+}
+
+void pilhaApagar(Pilha *h) {
+    free(h);
+    return;
+}
+
+void empilhar(Pilha *h, char proc[MAX]) {
+    if (pilhaSize(h) >= CAP)
+        printf("Histórico cheio!\n");
+    else {
+        strcpy(h->procedimentos[pilhaSize(h)], proc);
+        h->size++;
+    }
+    return;
+}
+
+bool desempilhar(Pilha *h, char *removido[MAX]) {
+    if (pilhaVazia(h)) {
+        printf("Histórico já está vazio!\n");
+        return false;
+    }
+    strcpy(*removido, h->procedimentos[pilhaSize(h)-1]); //copia o último elemento da pilha para o buffer
+    h->size--; //diminui o tamanho, vai sobrescrever a string desempilhada
+    return true;
+}
+
+int pilhaSize(Pilha *h) {
+    return h->size;
+}
+
+bool pilhaVazia(Pilha *h) {
+    return (pilhaSize(h) == 0) ? true : false;
+}
 
 //funções de Fila
 
@@ -68,7 +102,7 @@ int filaSize(Fila *f) {
 }
 
 bool filaVazia(Fila *f) {
-    return (head == tail == NULL) ? true : false;
+    return (f->head == NULL) ? true : false;
 }
 
 void queue(Fila *f, Node *n) {
@@ -86,4 +120,14 @@ void queue(Fila *f, Node *n) {
     return;
 }
 
-Node dequeue(Fila *f, Node *n);
+bool dequeue(Fila *f, Node *removido) {
+    if (filaVazia(f)) {
+        printf("Fila vazia!\n");
+        return false;
+    }
+    *removido = *(f->head); //guarda o head no buffer
+    Node *aux = f->head;
+    f->head = f->head->prox; //avança o head para o próximo item da fila
+    nodeApagar(aux); //apaga o antigo head
+    return true;
+}
