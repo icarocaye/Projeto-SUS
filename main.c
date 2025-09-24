@@ -1,22 +1,28 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include "TADs.h"
+#include "./TADS/Pilha.h"
+#include "./TADS/Fila.h"
+
+
 
 int main()
 {   
 
     int c;
+    Pilha *pacientes = pilhaCriar();
+
 
     do{
         scanf("%d",&c);
         switch(c){
             //REGISTRAR PACIENTE
             case 1:
+               
+                int id;
                 char nome[200];
-                char id[100];
+                //verificar se id e unico
                 
-                //criar id unico
-
                 //adicionar paciente na lista
 
                 //adicionar paciente na fila
