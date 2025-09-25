@@ -1,6 +1,6 @@
 #include "Lista.h"
 #include <stdlib.h>
-
+#include <stdio.h>
 
 //funcoes registro
 
@@ -13,8 +13,8 @@ Registro *criarRegistro(Paciente *paciente, Pilha *historico)
     reg->prox = NULL;
     return reg;
 }
-//funcoes Lista
 
+//funcoes Lista
 Lista* criarLista(){
     Lista* lista = malloc(sizeof(Lista));
    
@@ -35,35 +35,79 @@ bool listaVazia(Lista *l){
 }
 //insere registro de paciente no fim da lista
 void inserirPaciente(Registro *registro_paciente, Lista *l){
-    
-    if(listaVazia(l))
-    {   
+    if(l== NULL)
+        return;
+    if(l->inicio == NULL)   
         l->inicio = registro_paciente;
-        l->topo = registro_paciente;
-    }else{
-
+    else
         l->topo->prox = registro_paciente;
-        l->topo = registro_paciente;
-    }
-
+    
+    l->topo = registro_paciente;
     l->tamanho++;
 
 }
 
-Paciente buscarPaciente(int id, Lista *l)
-{      
-    if(inicio->paciente->id == id )
-        return inicio->paciente;
-    Registro*aux=inicio;
-    while(aux!=null)
-    {   
-        if(aux->paciente->id==id)
-            return aux;
-        aux=aux->prox;
-    }
+Paciente *buscarPaciente(int id, Lista *l)
+{   
+    Registro *r = l->inicio;
+    while(r!=NULL && r->paciente->id!=id)
+        r=r->prox;
+    if(r!=NULL)
+        return r->paciente;
     return NULL;
 }
-void apagarPaciente(int id, Lista *l)
-{
-    
+
+Paciente* apagarPaciente(int id, Lista *l)
+{   
+    if (l == NULL || l->inicio == NULL) {
+        return NULL; // lista vazia
+    }
+
+    Registro *r = l->inicio;
+    Registro *aux = NULL;
+
+    // procura o registro
+    while (r != NULL && r->paciente->id != id) {
+        aux = r;
+        r = r->prox;
+    }
+
+    if (r == NULL) {
+        // não encontrado
+        return NULL;
+    }
+
+    // caso seja o primeiro nó
+    if (r == l->inicio) {
+        l->inicio = r->prox;
+        printf("\nremovido do inicio\n");
+    } else {
+        aux->prox = r->prox;
+        printf("\nremovido do meio\n");
+    }
+
+    // caso seja o último nó
+    if (r == l->topo) {
+        l->topo = aux;
+        printf("\nremovido do topo\n");
+    }
+
+    Paciente *p = r->paciente; // guarda o paciente
+    free(r); // libera o registro
+    l->tamanho--;
+
+    return p;
+}
+
+
+void listarPacientes(Lista *l)
+{   
+    Registro *r = l->inicio;
+    while(r!=NULL)
+    {
+        printf("\n Paciente (id=%d) \n ---------\n nome: %s \n historico: lorem ipsilum lorem ipsilum \n",
+        r->paciente->id, r->paciente->nome);
+        r=r->prox;
+    }
+
 }
