@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #ifndef PILHA
 #define PILHA
 #define CAP 10

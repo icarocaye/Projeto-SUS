@@ -29,6 +29,11 @@ Paciente *pacienteCriar(char *nome, int id);
 void pacienteApagar(Paciente *p);
 
 
+//funções de No
+
+No *NoCriar(Paciente *p, Pilha *hist);
+void NoApagar(No *n);
+
 //funções de Fila
 
 Fila *filaCriar();
