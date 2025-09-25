@@ -28,7 +28,6 @@ typedef struct Fila {
 Paciente *pacienteCriar(char *nome, int id);
 void pacienteApagar(Paciente *p);
 
-
 //funções de No
 
 No *NoCriar(Paciente *p, Pilha *hist);

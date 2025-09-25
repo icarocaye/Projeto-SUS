@@ -18,7 +18,7 @@ Registro *criarRegistro(Paciente *paciente, Pilha *historico)
 Lista* criarLista(){
     Lista* lista = malloc(sizeof(Lista));
    
-    lista->inicio = 0;
+    lista->inicio = NULL;
     lista->topo = NULL;
     lista->tamanho = 0;
     
@@ -26,6 +26,14 @@ Lista* criarLista(){
 }
 void apagarLista(Lista *l)
 {
+    if (l == NULL) return;
+
+    Registro *r = l->inicio;
+    while (r != NULL) {
+        Registro *prox = r->prox;
+        free(r); // aqui você pode decidir se libera também paciente e histórico
+        r = prox;
+    }
     free(l);
 }
 
@@ -43,6 +51,7 @@ void inserirPaciente(Registro *registro_paciente, Lista *l){
         l->topo->prox = registro_paciente;
     
     l->topo = registro_paciente;
+    registro_paciente->prox = NULL;
     l->tamanho++;
 
 }
@@ -52,14 +61,17 @@ Paciente *buscarPaciente(int id, Lista *l)
     Registro *r = l->inicio;
     while(r!=NULL && r->paciente->id!=id)
         r=r->prox;
+
     if(r!=NULL)
         return r->paciente;
+
     return NULL;
 }
 
+
 Paciente* apagarPaciente(int id, Lista *l)
 {   
-    if (l == NULL || l->inicio == NULL) {
+    if (l == NULL || listaVazia(l)) {
         return NULL; // lista vazia
     }
 
@@ -84,14 +96,14 @@ Paciente* apagarPaciente(int id, Lista *l)
     } else {
         aux->prox = r->prox;
         printf("\nremovido do meio\n");
-    }
+    } 
 
     // caso seja o último nó
     if (r == l->topo) {
         l->topo = aux;
         printf("\nremovido do topo\n");
     }
-
+    
     Paciente *p = r->paciente; // guarda o paciente
     free(r); // libera o registro
     l->tamanho--;
