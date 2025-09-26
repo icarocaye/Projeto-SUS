@@ -9,11 +9,11 @@
 bool savePac(FILE *f, Paciente *p);
 bool saveHist(FILE *f, Pilha *h);
 
-//será usada dentro de saveFila:
+//será usada dentro de saveFila e saveLista:
 bool saveNo(FILE *f, Node *n);
 
-bool saveFila(FILE *f, Fila *l);
-
+bool saveFila(FILE *f, Fila *);
+bool saveLista(FILE *f, Lista *l);
 
 //funções para ler um arquivo
 
@@ -21,10 +21,11 @@ bool saveFila(FILE *f, Fila *l);
 Paciente lerPac(FILE *f);
 Pilha lerHist(FILE *f);
 
-//será usada dentro de lerFila:
+//será usada dentro de lerFila e lerLista:
 Node lerNo(FILE *f);
 
 Fila lerFila(FILE *f);
+Lista lerLista(FILE *f);
 
 
 #endif
