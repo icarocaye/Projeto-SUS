@@ -67,7 +67,17 @@ Paciente *buscarPaciente(int id, Lista *l)
 
     return NULL;
 }
+Registro *buscarRegistro(int id, Lista *l)
+{   
+    Registro *r = l->inicio;
+    while(r!=NULL && r->paciente->id!=id)
+        r=r->prox;
 
+    if(r!=NULL)
+        return r;
+
+    return NULL;
+}
 
 Paciente* apagarPaciente(int id, Lista *l)
 {   

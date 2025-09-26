@@ -73,9 +73,37 @@ int main()
             break;
             //ADICIONAR PROCEDIMENTO AO HISTORICO MEDICO
             case 3:
+            //entradas
+            int id;scanf(" %d",&id);
+            
+            //Busca registro pelo id do paciente
+            Registro *busca = buscarRegistro(id,registros);
+            if(busca==NULL)
+            {
+                //paciente não existe
+                break;
+            }
+            //Adiciona procedimento
+            char procedimento[100];scanf(" %99[^\n]",procedimento);
+            empilhar(busca->historico,procedimento);
+
+
 
             break;
             //DESFAZER PROCEDIMENTO DO HISTORICO MEDICO
+            //entradas
+            int id;scanf(" %d",&id);
+            
+            //Busca registro pelo id do paciente
+            Registro *busca = buscarRegistro(id,registros);
+            if(busca==NULL)
+            {
+                //paciente não existe
+                break;
+            }
+
+            //remove procedimento
+            //desempilhar(busca->historico);
             case 4:
 
             break;

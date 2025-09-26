@@ -29,6 +29,8 @@ void apagarLista(Lista* l);
 void inserirPaciente(Registro *registro_paciente,Lista *l);
 Paciente* apagarPaciente(int id, Lista *l);
 Paciente *buscarPaciente(int id, Lista *l);
+Registro *buscarRegistro(int id, Lista *l);
+
 void listarPacientes(Lista *l);
 bool listaVazia(Lista *l);
 
