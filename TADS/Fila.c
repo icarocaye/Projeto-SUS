@@ -10,9 +10,19 @@
 
 //funções de Paciente
 
-Paciente *pacienteCriar(char *Registrome, int id) {
+Paciente *pacienteCriar(char *nome, int id) {
     Paciente *p = (Paciente *)malloc(sizeof(Paciente));
-    p->nome = Registrome;
+    if(p == NULL){
+        perror("Erro ao alocar paciente");
+        exit(1);
+    }
+    p->nome = malloc(strlen(nome)+1);
+    if(p->nome == NULL)
+    {
+        perror("Erro ao alocar nome do paciente");
+        exit(1);
+    }
+    strcpy(p->nome,nome);
     p->id = id;
 
     return p;

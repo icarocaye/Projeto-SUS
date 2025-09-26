@@ -21,7 +21,7 @@ typedef struct Fila {
 
 //funções de Paciente
 
-Paciente *pacienteCriar(char *Registrome, int id);
+Paciente *pacienteCriar(char *nome, int id);
 void pacienteApagar(Paciente *p);
 
 //funções de Registro

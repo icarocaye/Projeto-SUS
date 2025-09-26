@@ -41,7 +41,7 @@ int main()
                 //entradas
 
                 printf("Entre com o id do paciente: ");
-                int id;scanf("%d",&id);
+                int id;scanf(" %d",&id);
 
                 //verificar se id e unico
                 if(buscarPaciente(id, registros)!= NULL){
@@ -50,7 +50,7 @@ int main()
                 }
 
                 printf("Entre com o nome do paciente: ");
-                char nome[200];scanf("%s",nome);
+                char nome[200];scanf(" %199[^\n]",nome);
 
                 
                
