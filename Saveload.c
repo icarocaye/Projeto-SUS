@@ -48,7 +48,7 @@ bool saveHist(FILE *fp, Pilha *h)
 Pré-Cond: o Nó existe e não é NULL, o ponteiro para arquivo foi criado no modo wb
 Pós-Cond: usa as funções anteriores para salvar o Paciente e o Histórico do Nó e, depois, salva o ponteiro para o próximo Nó
 */
-bool saveNo(FILE *fp, Node *n)
+bool saveNo(FILE *fp, No *n)
 {  
     if (n == NULL) {
         printf("Erro ao salvar Nó!");
@@ -60,7 +60,7 @@ bool saveNo(FILE *fp, Node *n)
     if (saveHist(fp, n->hist) == false)
         return false;
     //salvar o ponteiro para o próximo Nó
-    if (fwrite(n->prox, sizeof(Node *), 1, fp) < 1) {
+    if (fwrite(n->prox, sizeof(No *), 1, fp) < 1) {
         printf("Erro ao salvar Nó!");
         return false;
     }
@@ -84,7 +84,7 @@ bool saveFila(FILE *fp, Fila *f)
         return false;
     }
     //salvar os nós!
-    Node *aux = f->head;
+    No *aux = f->head;
     while (f->head != NULL) {
         saveNo(fp, aux);
         aux = aux->prox;
@@ -106,7 +106,7 @@ bool saveLista(FILE *fp, Lista *L)
         return false;
     }
     //salvar os nós!
-    Node *aux = L->head;
+    No *aux = L->head;
     while (L->head != NULL) {
         saveNo(fp, aux);
         aux = aux->prox;
@@ -143,7 +143,7 @@ bool lerHist(FILE *fp, Pilha *h)
 }
 
 //será usada dentro de lerFila:
-bool lerNo(FILE *fp, Node *n)
+bool lerNo(FILE *fp, No *n)
 {
     if (n == NULL) {
         printf("Erro ao importar Nó!");
@@ -155,7 +155,7 @@ bool lerNo(FILE *fp, Node *n)
     if (lerHist(fp, n->hist) == false)
         return false;
     //ler o ponteiro para o próximo Nó
-    if (fread(n->prox, sizeof(Node *), 1, fp) < 1) {
+    if (fread(n->prox, sizeof(No *), 1, fp) < 1) {
         printf("Erro ao importar Nó!");
         return false;
     }
@@ -175,7 +175,7 @@ bool lerFila(FILE *fp, Fila*f)
         return false;
     }
     //ler os nós, com base no tamanho da fila!
-    Node *aux = f->head;
+    No *aux = f->head;
     for (int i = 0; i < f->size; i++) {
         lerNo(fp, aux);
         aux = aux->prox;
@@ -197,7 +197,7 @@ bool lerLista(FILE *fp, Lista *L)
         return false;
     }
     //ler os nós, com base no tamanho da fila!
-    Node *aux = L->head;
+    No *aux = L->head;
     for (int i = 0; i < L->size; i++) {
         lerNo(fp, aux);
         aux = aux->prox;

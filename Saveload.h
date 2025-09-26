@@ -1,7 +1,9 @@
 #ifndef SAVE
 #define SAVE
 #include <stdio.h>
-#include "TADs.h"
+#include "Pilha.h"
+#include "Fila.h"
+#include "Lista.h"
 
 //funções para gravar no arquivo
 
