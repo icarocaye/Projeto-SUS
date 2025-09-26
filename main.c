@@ -50,7 +50,7 @@ int main()
                 }
 
                 printf("Entre com o nome do paciente: ");
-                char nome[200];scanf(" %199[^\n]",nome);
+                char nome[120];scanf(" %199[^\n]",nome);
 
                 
                
@@ -102,8 +102,10 @@ int main()
                 break;
             }
 
+            busca->historico;
             //remove procedimento
-            //desempilhar(busca->historico);
+            desempilhar(busca->historico);
+
             case 4:
 
             break;
@@ -113,6 +115,7 @@ int main()
             break;
             //MOSTRAR FILA DE ESPERA
             case 6: 
+            
             
             break;
             //MOSTRAR HISTORICO DO PACIENTE

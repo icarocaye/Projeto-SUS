@@ -7,7 +7,6 @@
 
 //Estrutura de registro da lista de pacientes
 typedef struct Registro{
-
     Paciente *paciente;
     Pilha *historico;
     struct Registro *prox;
