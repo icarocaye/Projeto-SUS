@@ -118,7 +118,8 @@ void listarPacientes(Lista *l)
     while(r!=NULL)
     {
         printf("\n Paciente (id=%d) \n ---------\n nome: %s \n historico: lorem ipsilum lorem ipsilum \n",
-        r->paciente->id, r->paciente->nome);
+        r->paciente->id, r->paciente->nome);\
+        
         r=r->prox;
     }
 

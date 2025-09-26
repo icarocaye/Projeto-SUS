@@ -4,15 +4,15 @@
 #include <stdbool.h>
 
 #include "Fila.h"
-
+#include "Lista.h"
 
 
 
 //funções de Paciente
 
-Paciente *pacienteCriar(char *nome, int id) {
+Paciente *pacienteCriar(char *Registrome, int id) {
     Paciente *p = (Paciente *)malloc(sizeof(Paciente));
-    p->nome = nome;
+    p->nome = Registrome;
     p->id = id;
 
     return p;
@@ -23,20 +23,20 @@ void pacienteApagar(Paciente *p) {
     return;
 }
 
-//funções de No
+//funções de Registro
 
-No *NoCriar(Paciente *p, Pilha *hist) {
-    No *n = (No *)malloc(sizeof(No));
+Registro *RegistroCriar(Paciente *p, Pilha *hist) {
+    Registro *n = (Registro *)malloc(sizeof(Registro));
     n->paciente = p;
-    n->hist = hist;
+    n->historico = hist;
     n->prox = NULL;
 
     return n;
 }
 
-void NoApagar(No *n) {
+void RegistroApagar(Registro *n) {
     pacienteApagar(n->paciente);
-    pilhaApagar(n->hist);
+    pilhaApagar(n->historico);
     free(n);
 
     return;
@@ -67,7 +67,7 @@ bool filaVazia(Fila *f) {
     return (f->head == NULL) ? true : false;
 }
 
-void queue(Fila *f, No *n) {
+void enfileirar(Fila *f, Registro *n) {
     //fila vazia
     if (filaVazia(f)) {
         f->head = n;
@@ -82,14 +82,14 @@ void queue(Fila *f, No *n) {
     return;
 }
 
-bool dequeue(Fila *f, No *removido) {
+bool desenfileirar(Fila *f, Registro *removido) {
     if (filaVazia(f)) {
         printf("Fila vazia!\n");
         return false;
     }
-    *removido = *(f->head); //guarda o head no buffer
-    No *aux = f->head;
+    *removido = *(f->head); //guarda o head Registro buffer
+    Registro *aux = f->head;
     f->head = f->head->prox; //avança o head para o próximo item da fila
-    NoApagar(aux); //apaga o antigo head
+    RegistroApagar(aux); //apaga o antigo head
     return true;
 }

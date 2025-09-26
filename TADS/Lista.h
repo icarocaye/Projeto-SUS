@@ -1,7 +1,9 @@
 #include "Fila.h"
-
+#include "Pilha.h"
 #ifndef LISTA
 #define LISTA
+
+
 
 //Estrutura de registro da lista de pacientes
 typedef struct Registro{

@@ -9,29 +9,25 @@ typedef struct {
 
 
 
-//No conterá 
-typedef struct No {
-    Paciente *paciente;
-    Pilha *hist;
-    struct No *prox;
-} No;
+//Registro conterá 
+
 
 //Fila servirá como a fila de espera do hospital
 typedef struct Fila {
-    No *head;
-    No *tail;
+    struct Registro *head;
+    struct Registro *tail;
     int tamanho;
 } Fila;
 
 //funções de Paciente
 
-Paciente *pacienteCriar(char *nome, int id);
+Paciente *pacienteCriar(char *Registrome, int id);
 void pacienteApagar(Paciente *p);
 
-//funções de No
+//funções de Registro
 
-No *NoCriar(Paciente *p, Pilha *hist);
-void NoApagar(No *n);
+struct Registro *RegistroCriar(Paciente *p, Pilha *hist);
+void RegistroApagar(struct Registro *n);
 
 //funções de Fila
 
@@ -40,7 +36,7 @@ void filaApagar(Fila *f);
 
 int filaSize(Fila *f);
 bool filaVazia(Fila *f);
-void enfileirar(Fila *f, No *n);
-bool desenfileirar(Fila *f, No *removido);
+void enfileirar(Fila *f, struct Registro *n);
+bool desenfileirar(Fila *f, struct Registro *removido);
 
 #endif
