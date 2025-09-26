@@ -67,7 +67,17 @@ Paciente *buscarPaciente(int id, Lista *l)
 
     return NULL;
 }
+Registro *buscarRegistro(int id, Lista *l)
+{   
+    Registro *r = l->inicio;
+    while(r!=NULL && r->paciente->id!=id)
+        r=r->prox;
 
+    if(r!=NULL)
+        return r;
+
+    return NULL;
+}
 
 Paciente* apagarPaciente(int id, Lista *l)
 {   
@@ -118,7 +128,8 @@ void listarPacientes(Lista *l)
     while(r!=NULL)
     {
         printf("\n Paciente (id=%d) \n ---------\n nome: %s \n historico: lorem ipsilum lorem ipsilum \n",
-        r->paciente->id, r->paciente->nome);
+        r->paciente->id, r->paciente->nome);\
+        
         r=r->prox;
     }
 
