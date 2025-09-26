@@ -12,7 +12,7 @@ bool savePac(FILE *f, Paciente *p);
 bool saveHist(FILE *f, Pilha *h);
 
 //será usada dentro de saveFila e saveLista:
-bool saveNo(FILE *f, Node *n);
+bool saveNo(FILE *f, No *n);
 
 bool saveFila(FILE *f, Fila *);
 bool saveLista(FILE *f, Lista *l);
@@ -24,7 +24,7 @@ bool lerPac(FILE *f, Paciente *p);
 bool lerHist(FILE *f, Pilha *h);
 
 //será usada dentro de lerFila e lerLista:
-bool lerNo(FILE *f, Node *n);
+bool lerNo(FILE *f, No *n);
 
 bool lerFila(FILE *f, Fila *);
 bool lerLista(FILE *f, Lista *l);

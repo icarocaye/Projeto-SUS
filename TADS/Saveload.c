@@ -35,7 +35,7 @@ bool saveHist(FILE *fp, Pilha *h)
         printf("Erro ao salvar histórico!");
         return false;
     }
-    if (fwrite(h->size, sizeof(int), 1, fp) < 1) {
+    if (fwrite(h->tamanho, sizeof(int), 1, fp) < 1) {
         printf("Erro ao salvar histórico!");
         return false;
     }
@@ -79,7 +79,7 @@ bool saveFila(FILE *fp, Fila *f)
         return false;
     }
     //salvar o tamanho da fila primeiro, para facilitar a leitura
-    if (fwrite(f->size, sizeof(int), 1, fp) < 1) {
+    if (fwrite(f->tamanho, sizeof(int), 1, fp) < 1) {
         printf("Erro ao salvar Fila!");
         return false;
     }
@@ -101,13 +101,13 @@ Pós-Cond: Escreve no arquivo o tamanho da Lista e, depois, usa a função saveN
 bool saveLista(FILE *fp, Lista *L)
 {
     //salvar o tamanho da lista primeiro, para facilitar a leitura
-    if (fwrite(L->size, sizeof(int), 1, fp) < 1) {
+    if (fwrite(L->tamanho, sizeof(int), 1, fp) < 1) {
         printf("Erro ao salvar Fila!");
         return false;
     }
     //salvar os nós!
-    No *aux = L->head;
-    while (L->head != NULL) {
+    No *aux = L->inicio;
+    while (L->inicio != NULL) {
         saveNo(fp, aux);
         aux = aux->prox;
     }
@@ -134,7 +134,7 @@ bool lerHist(FILE *fp, Pilha *h)
         printf("Erro ao importar histórico!");
         return false;
     }
-    if (fread(h->size, sizeof(int), 1, fp) < 1) {
+    if (fread(h->tamanho, sizeof(int), 1, fp) < 1) {
         printf("Erro ao importar histórico!");
         return false;
     }
@@ -170,13 +170,13 @@ bool lerFila(FILE *fp, Fila*f)
         return false;
     }
     //ler o tamanho da fila primeiro
-    if (fread(f->size, sizeof(int), 1, fp) < 1) {
+    if (fread(f->tamanho, sizeof(int), 1, fp) < 1) {
         printf("Erro ao salvar Fila!");
         return false;
     }
     //ler os nós, com base no tamanho da fila!
     No *aux = f->head;
-    for (int i = 0; i < f->size; i++) {
+    for (int i = 0; i < f->tamanho; i++) {
         lerNo(fp, aux);
         aux = aux->prox;
     }
@@ -192,13 +192,13 @@ bool lerLista(FILE *fp, Lista *L)
         return false;
     }
     //ler o tamanho da fila primeiro
-    if (fread(L->size, sizeof(int), 1, fp) < 1) {
+    if (fread(L->tamanho, sizeof(int), 1, fp) < 1) {
         printf("Erro ao salvar Fila!");
         return false;
     }
     //ler os nós, com base no tamanho da fila!
-    No *aux = L->head;
-    for (int i = 0; i < L->size; i++) {
+    No *aux = L->tamanho;
+    for (int i = 0; i < L->tamanho; i++) {
         lerNo(fp, aux);
         aux = aux->prox;
     }
