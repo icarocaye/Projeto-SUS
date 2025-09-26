@@ -84,9 +84,10 @@ bool saveFila(FILE *fp, Fila *f)
         return false;
     }
     //salvar os nós!
+    Node *aux = f->head;
     while (f->head != NULL) {
-        saveNo(fp, f->head);
-        f->head = f->head->prox;
+        saveNo(fp, aux);
+        aux = aux->prox;
     }
 
     return true;
@@ -105,9 +106,10 @@ bool saveLista(FILE *fp, Lista *L)
         return false;
     }
     //salvar os nós!
+    Node *aux = L->head;
     while (L->head != NULL) {
-        saveNo(fp, f->head);
-        L->head = L->head->prox;
+        saveNo(fp, aux);
+        aux = aux->prox;
     }
 
     return true;
@@ -116,10 +118,90 @@ bool saveLista(FILE *fp, Lista *L)
 //funções para ler um arquivo
 
 //serão usadas dentro de lerNo:
-Paciente lerPac(FILE *fp);
-Pilha lerHist(FILE *fp);
+bool lerPac(FILE *fp, Paciente *p)
+{
+    //FAZER DEPOIS DE DESENVOLVER savePac
+}
+
+bool lerHist(FILE *fp, Pilha *h)
+{
+    if (h == NULL) {
+        printf("Erro ao importar histórico!");
+        return false;
+    }
+    //lê os 10 procedimentos, cada um sendo um vetor de 101 chars, no arquivo f
+    if (fread(h->procedimentos, sizeof(char[MAX]), CAP, fp) < CAP) {
+        printf("Erro ao importar histórico!");
+        return false;
+    }
+    if (fread(h->size, sizeof(int), 1, fp) < 1) {
+        printf("Erro ao importar histórico!");
+        return false;
+    }
+
+    return true;
+}
 
 //será usada dentro de lerFila:
-Node lerNo(FILE *fp);
+bool lerNo(FILE *fp, Node *n)
+{
+    if (n == NULL) {
+        printf("Erro ao importar Nó!");
+        return false;
+    }
+    //ler o Paciente e o Histórico
+    if (lerPac(fp, n->paciente) == false)
+        return false;
+    if (lerHist(fp, n->hist) == false)
+        return false;
+    //ler o ponteiro para o próximo Nó
+    if (fread(n->prox, sizeof(Node *), 1, fp) < 1) {
+        printf("Erro ao importar Nó!");
+        return false;
+    }
 
-Fila lerFila(FILE *fp);
+    return true;
+}
+
+bool lerFila(FILE *fp, Fila*f)
+{
+    if (f == NULL) {
+        printf("Erro ao importar Fila!");
+        return false;
+    }
+    //ler o tamanho da fila primeiro
+    if (fread(f->size, sizeof(int), 1, fp) < 1) {
+        printf("Erro ao salvar Fila!");
+        return false;
+    }
+    //ler os nós, com base no tamanho da fila!
+    Node *aux = f->head;
+    for (int i = 0; i < f->size; i++) {
+        lerNo(fp, aux);
+        aux = aux->prox;
+    }
+
+    return true;
+}
+
+//assim como as funções de salvar, a função lerLista é quase igual a lerFila
+bool lerLista(FILE *fp, Lista *L)
+{
+    if (L == NULL) {
+        printf("Erro ao importar Fila!");
+        return false;
+    }
+    //ler o tamanho da fila primeiro
+    if (fread(L->size, sizeof(int), 1, fp) < 1) {
+        printf("Erro ao salvar Fila!");
+        return false;
+    }
+    //ler os nós, com base no tamanho da fila!
+    Node *aux = L->head;
+    for (int i = 0; i < L->size; i++) {
+        lerNo(fp, aux);
+        aux = aux->prox;
+    }
+
+    return true;
+}

@@ -18,14 +18,14 @@ bool saveLista(FILE *f, Lista *l);
 //funções para ler um arquivo
 
 //serão usadas dentro de lerNo:
-Paciente lerPac(FILE *f);
-Pilha lerHist(FILE *f);
+bool lerPac(FILE *f, Paciente *p);
+bool lerHist(FILE *f, Pilha *h);
 
 //será usada dentro de lerFila e lerLista:
-Node lerNo(FILE *f);
+bool lerNo(FILE *f, Node *n);
 
-Fila lerFila(FILE *f);
-Lista lerLista(FILE *f);
+bool lerFila(FILE *f, Fila *);
+bool lerLista(FILE *f, Lista *l);
 
 
 #endif
