@@ -1,18 +1,15 @@
-#include <stdbool.h>
-
 #ifndef PILHA
 #define PILHA
+#include <stdio.h>
+#include <stdbool.h>
 #define CAP 10
 #define MAX 101
-
 
 //Pilha será usada para o histórico dos pacientes
 typedef struct Pilha {
     char procedimentos[CAP][MAX]; //vetor de 10 strings de até 100 chars
     int tamanho;
 } Pilha;
-
-#endif
 
 //funções de Pilha
 
@@ -24,3 +21,5 @@ bool desempilhar(Pilha *h);
 int pilhaSize(Pilha *h);
 bool pilhaVazia(Pilha *h);
 int pilhaTamanho(Pilha *h);
+
+#endif
