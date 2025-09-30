@@ -1,26 +1,17 @@
-#include "Fila.h"
-#include "Pilha.h"
 #ifndef LISTA
 #define LISTA
-
-
-
-//Estrutura de registro da lista de pacientes
-typedef struct Registro{
-    Paciente *paciente;
-    Pilha *historico;
-    struct Registro *prox;
-}Registro;
+#include <stdio.h>
+#include "Registro.h"
 
 //Lista encadeada para registro dos pacientes;
+
 typedef struct Lista{
     Registro *topo;
     Registro *inicio;
     int tamanho;
 }Lista;
 
-Registro *criarRegistro(Paciente *paciente, Pilha *historico);
-Registro apagarRegistro(Registro *registro);
+//funções de Lista
 
 Lista* criarLista();
 void apagarLista(Lista* l);

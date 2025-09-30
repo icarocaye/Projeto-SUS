@@ -2,21 +2,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-//funcoes registro
-
-
-Registro *criarRegistro(Paciente *paciente, Pilha *historico)
-{
-    Registro *reg = malloc(sizeof(Registro)); 
-    reg->paciente = paciente;
-    reg->historico = historico;
-    reg->prox = NULL;
-    return reg;
-}
-
 //funcoes Lista
+
 Lista* criarLista(){
     Lista* lista = malloc(sizeof(Lista));
+    if (lista == NULL) {
+        printf("Erro ao alocar lista!");
+        return NULL;
+    }
    
     lista->inicio = NULL;
     lista->topo = NULL;
@@ -24,6 +17,7 @@ Lista* criarLista(){
     
     return lista;
 }
+
 void apagarLista(Lista *l)
 {
     if (l == NULL) return;

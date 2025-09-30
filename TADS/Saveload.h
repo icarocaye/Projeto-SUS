@@ -1,7 +1,7 @@
 #ifndef SAVE
 #define SAVE
 #include <stdio.h>
-#include "Pilha.h"
+//Fila.h e Lista.h já incluem todos os outros TADs
 #include "Fila.h"
 #include "Lista.h"
 
