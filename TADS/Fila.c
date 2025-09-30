@@ -67,16 +67,16 @@ void enfileirar(Fila *f, Registro *n) {
 Pré-Cond: Fila existe e não é vazia
 Pós-Cond: retira o primeiro elemento da fila, fazendo ela "andar" e retorna o elemento retirado
 */
-Registro desenfileirar(Fila *f) {
+bool desenfileirar(Fila *f, Registro *removido) {
     if (filaVazia(f)) {
         printf("Fila vazia!\n");
-        exit(1);
+        return false;
     }
-    Registro removido = *(f->head); //guarda o head no buffer
+    *removido = *(f->head); //guarda o head no buffer
 
     Registro *aux = f->head;
     f->head = f->head->prox; //avança o head para o próximo item da fila
     RegistroApagar(aux); //apaga o antigo head
     
-    return removido;
+    return true;
 }
