@@ -3,13 +3,16 @@
 #define FILA
 
 typedef struct {
-    char *nome;
     int id;
+    char nome[50];
 } Paciente;
 
-
-
-//Registro conterá 
+//Registro servirá como Nó, tanto de Lista como de Fila
+typedef struct No {
+    Paciente paciente;
+    Pilha historico;
+    struct No *prox;
+} Registro;
 
 
 //Fila servirá como a fila de espera do hospital
