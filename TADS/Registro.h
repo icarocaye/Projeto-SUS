@@ -18,6 +18,6 @@ typedef struct Registro{
 }Registro;
 
 Registro *criarRegistro(Paciente *paciente, Pilha *historico);
-Registro apagarRegistro(Registro *registro);
+void apagarRegistro(Registro *registro);
 
 #endif

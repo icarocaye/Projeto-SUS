@@ -76,7 +76,7 @@ bool desenfileirar(Fila *f, Registro *removido) {
 
     Registro *aux = f->head;
     f->head = f->head->prox; //avança o head para o próximo item da fila
-    RegistroApagar(aux); //apaga o antigo head
+    apagarRegistro(aux); //apaga o antigo head
     
     return true;
 }

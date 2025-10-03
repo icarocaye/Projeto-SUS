@@ -8,7 +8,7 @@
 Pré-Cond: p aponta para Paciente e hist aponta para Pilha
 Pós-Cond: aloca um Registro (nó) na heap, atribui Paciente e Histórico à ele e retorna um ponteiro para ele
 */
-Registro *RegistroCriar(Paciente *p, Pilha *hist) {
+Registro *criarRegistro(Paciente *p, Pilha *hist) {
     if (p == NULL || hist == NULL) {
         printf("Erro ao alocar registro!");
         return NULL;
@@ -29,7 +29,7 @@ Registro *RegistroCriar(Paciente *p, Pilha *hist) {
 Pré-Cond: n aponta para um Registro
 Pós-Cond: apaga o Paciente e a Pilha associados ao Registro e, depois, desaloca também ele
 */
-void RegistroApagar(Registro *n) {
+void apagarRegistro(Registro *n) {
     if (n != NULL) {
         pacienteApagar(n->paciente);
         pilhaApagar(n->historico);
