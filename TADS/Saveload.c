@@ -28,12 +28,12 @@ bool savePac(FILE *fp, Paciente *p)
         return false;
     }
     //salva o id do paciente
-    if (fwrite(p->id, sizeof(int), 1, fp) < 1) {
+    if (fwrite(&(p->id), sizeof(int), 1, fp) < 1) {
         printf("Erro ao salvar Paciente! Código 1");
         return false;
     }
     //salva o nome do paciente com, no máximo, 49 caracteres (e 1 de parada)
-    if (fwrite(p->nome, sizeof(char[50]), 1, fp) < 1) {
+    if (fwrite(&(p->nome), sizeof(char[50]), 1, fp) < 1) {
         printf("Erro ao salvar Paciente! Código 2");
         return false;
     }
@@ -52,12 +52,12 @@ bool saveHist(FILE *fp, Pilha *h)
         return false;
     }
     //salva os 10 procedimentos, cada um sendo um vetor de 101 chars, no arquivo f
-    if (fwrite(h->procedimentos, sizeof(char[MAX]), CAP, fp) < CAP) {
+    if (fwrite(&(h->procedimentos), sizeof(char[MAX]), CAP, fp) < CAP) {
         printf("Erro ao salvar histórico! Código 2");
         return false;
     }
     //salva o tamanho usado do histórico
-    if (fwrite(h->tamanho, sizeof(int), 1, fp) < 1) {
+    if (fwrite(&(h->tamanho), sizeof(int), 1, fp) < 1) {
         printf("Erro ao salvar histórico! Código 1");
         return false;
     }
@@ -82,7 +82,7 @@ bool saveReg(FILE *fp, Registro *n)
     if (saveHist(fp, n->historico) == false)
         return false;
     //salvar o ponteiro para o próximo Nó
-    if (fwrite(n->prox, sizeof(Registro *), 1, fp) < 1) {
+    if (fwrite(&(n->prox), sizeof(Registro *), 1, fp) < 1) {
         printf("Erro ao salvar Nó! Código 3");
         return false;
     }
@@ -101,14 +101,14 @@ bool saveFila(FILE *fp, Fila *f)
         return false;
     }
     //salvar o tamanho da fila primeiro, para facilitar a leitura
-    if (fwrite(f->tamanho, sizeof(int), 1, fp) < 1) {
+    if (fwrite(&(f->tamanho), sizeof(int), 1, fp) < 1) {
         printf("Erro ao salvar Fila! Còdigo 1");
         return false;
     }
     //salvar os nós!
     Registro *aux = f->head;
     while (aux != NULL) {
-        saveNo(fp, aux);
+        saveReg(fp, aux);
         aux = aux->prox;
     }
 
@@ -127,14 +127,14 @@ bool saveLista(FILE *fp, Lista *L)
         return false;
     }
     //salvar o tamanho da lista primeiro, para facilitar a leitura
-    if (fwrite(L->tamanho, sizeof(int), 1, fp) < 1) {
+    if (fwrite(&(L->tamanho), sizeof(int), 1, fp) < 1) {
         printf("Erro ao salvar Fila! Código 1");
         return false;
     }
     //salvar os nós!
     Registro *aux = L->inicio;
     while (aux != NULL) {
-        saveNo(fp, aux);
+        saveReg(fp, aux);
         aux = aux->prox;
     }
 
@@ -155,12 +155,12 @@ bool lerPac(FILE *fp, Paciente *p)
         return false;
     }
     //ler o id do paciente
-    if (fread(p->id, sizeof(int), 1, fp) < 1) {
+    if (fread(&(p->id), sizeof(int), 1, fp) < 1) {
         printf("Erro ao importar paciente! Código 1");
         return false;
     }
     //ler o nome do paciente
-    if (fread(p->nome, sizeof(char[50]), 1, fp) < 1) {
+    if (fread(&(p->nome), sizeof(char[50]), 1, fp) < 1) {
         printf("Erro ao importar paciente! Código 2");
         return false;
     }
@@ -179,11 +179,11 @@ bool lerHist(FILE *fp, Pilha *h)
         return false;
     }
     //lê os 10 procedimentos, cada um sendo um vetor de 101 chars, no arquivo f
-    if (fread(h->procedimentos, sizeof(char[MAX]), CAP, fp) < CAP) {
+    if (fread(&(h->procedimentos), sizeof(char[MAX]), CAP, fp) < CAP) {
         printf("Erro ao importar histórico! Código 2");
         return false;
     }
-    if (fread(h->tamanho, sizeof(int), 1, fp) < 1) {
+    if (fread(&(h->tamanho), sizeof(int), 1, fp) < 1) {
         printf("Erro ao importar histórico! Código 1");
         return false;
     }
@@ -208,7 +208,7 @@ bool lerReg(FILE *fp, Registro *n)
     if (lerHist(fp, n->historico) == false)
         return false;
     //ler o ponteiro para o próximo Nó
-    if (fread(n->prox, sizeof(Registro *), 1, fp) < 1) {
+    if (fread(&(n->prox), sizeof(Registro *), 1, fp) < 1) {
         printf("Erro ao importar Nó! Código 3");
         return false;
     }
@@ -227,14 +227,14 @@ bool lerFila(FILE *fp, Fila*f)
         return false;
     }
     //ler o tamanho da fila primeiro
-    if (fread(f->tamanho, sizeof(int), 1, fp) < 1) {
+    if (fread(&(f->tamanho), sizeof(int), 1, fp) < 1) {
         printf("Erro ao salvar Fila! Código 1");
         return false;
     }
     //ler os nós, com base no tamanho da fila!
     Registro *aux = f->head;
     for (int i = 0; i < f->tamanho; i++) {
-        lerNo(fp, aux);
+        lerReg(fp, aux);
         aux = aux->prox;
     }
 
@@ -253,14 +253,14 @@ bool lerLista(FILE *fp, Lista *L)
         return false;
     }
     //ler o tamanho da fila primeiro
-    if (fread(L->tamanho, sizeof(int), 1, fp) < 1) {
+    if (fread(&(L->tamanho), sizeof(int), 1, fp) < 1) {
         printf("Erro ao salvar Fila! Código 1");
         return false;
     }
     //ler os nós, com base no tamanho da fila!
-    Registro *aux = L->tamanho;
+    Registro *aux = L->inicio;
     for (int i = 0; i < L->tamanho; i++) {
-        lerNo(fp, aux);
+        lerReg(fp, aux);
         aux = aux->prox;
     }
 

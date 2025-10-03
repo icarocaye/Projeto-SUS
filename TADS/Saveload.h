@@ -17,24 +17,10 @@ Código 3 - erro ao salvar um ponteiro.
 
 //funções para gravar no arquivo
 
-//serão usadas dentro de saveReg:
-bool savePac(FILE *f, Paciente *p);
-bool saveHist(FILE *f, Pilha *h);
-
-//será usada dentro de saveFila e saveLista:
-bool saveReg(FILE *f,Registro *n);
-
 bool saveFila(FILE *f, Fila *);
 bool saveLista(FILE *f, Lista *l);
 
 //funções para ler um arquivo
-
-//serão usadas dentro de lerReg:
-bool lerPac(FILE *f, Paciente *p);
-bool lerHist(FILE *f, Pilha *h);
-
-//será usada dentro de lerFila e lerLista:
-bool lerReg(FILE *f,Registro *n);
 
 bool lerFila(FILE *f, Fila *);
 bool lerLista(FILE *f, Lista *l);
