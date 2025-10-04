@@ -18,7 +18,6 @@ void pilhaApagar(Pilha *h);
 
 void empilhar(Pilha *h, char proc[MAX]);
 bool desempilhar(Pilha *h);
-int pilhaSize(Pilha *h);
 bool pilhaVazia(Pilha *h);
 int pilhaTamanho(Pilha *h);
 
