@@ -84,8 +84,11 @@ int main()
             //DAR ALTA AO PACIENTE
             case 2: 
                 
-                printf("Entre com o id do paciente que deseja dar alta: ");
+                printf("Entre com o id do paciente que deseja declarar óbito: ");
                 scanf(" %d", &id);
+
+                
+                //verificar se paciente esta na fila 
                 
                 paciente = buscarPaciente(id,registros);
 
@@ -103,6 +106,7 @@ int main()
                 apagarPaciente(id,registros);
 
                 printf("\n\n --- PACIENTE REMOVIDO DOS REGISTROS --- \n\n");
+
 
 
             break;
@@ -190,7 +194,7 @@ int main()
                     scanf(" %c", &prosseguir);
                 }while(prosseguir != 'N' && prosseguir != 'n' && prosseguir != 'S' && prosseguir != 's' );
 
-                desenfileirar(fila_de_espera);
+                desenfileirar(fila_de_espera);  
                 
             break;
             //MOSTRAR FILA DE ESPERA
