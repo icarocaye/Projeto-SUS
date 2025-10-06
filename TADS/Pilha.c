@@ -29,13 +29,19 @@ void empilhar(Pilha *h, char proc[MAX]) {
     return;
 }
 
-bool desempilhar(Pilha *h) {
+char *desempilhar(Pilha *h) {
     if (pilhaVazia(h)) {
         printf("Histórico já está vazio!\n");
         return false;
     }
+    char *topo = h->procedimentos[h->tamanho - 1];
+    char *aux = malloc(strlen(topo)+1);
+
+    strcpy(aux,topo);
+    strcpy(h->procedimentos[h->tamanho - 1],"");
+
     h->tamanho--; //diminui o tamanho, vai sobrescrever a string desempilhada
-    return true;
+    return aux;
 }
 
 int pilhaTamanho(Pilha *h) {

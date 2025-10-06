@@ -1,13 +1,35 @@
+#include "Pilha.h"
+
 #ifndef FILA
 #define FILA
-#include "Registro.h"
 
-//Fila servirá como a fila de espera dos pacientes que se encontram no hospital, usando Registros como Nós
+#define TAMANHO_MAX 150
+
+typedef struct {
+    char *nome;
+    int id;
+} Paciente;
+
+
+//Registro conterá 
+
+
+//Fila servirá como a fila de espera do hospital
 typedef struct Fila {
-    Registro *head;
-    Registro *tail;
+    struct Registro *inicio;
+    struct Registro *fim;
     int tamanho;
 } Fila;
+
+//funções de Paciente
+
+Paciente *pacienteCriar(char *nome, int id);
+void pacienteApagar(Paciente *p);
+
+//funções de Registro
+
+struct Registro *RegistroCriar(Paciente *p, Pilha *hist);
+void RegistroApagar(struct Registro *n);
 
 //funções de Fila
 
@@ -15,8 +37,13 @@ Fila *filaCriar();
 void filaApagar(Fila *f);
 
 int filaSize(Fila *f);
+
+bool filaCheia(Fila *f);
 bool filaVazia(Fila *f);
-void enfileirar(Fila *f, Registro *n);
-bool desenfileirar(Fila *f, Registro *removido);
+void enfileirar(Fila *f, struct Registro *n);
+bool desenfileirar(Fila *f);
+void mostrar_fila(Fila *f);
+
+struct Registro* fila_inicio(Fila *f);
 
 #endif
