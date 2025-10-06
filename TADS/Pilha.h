@@ -3,7 +3,7 @@
 #ifndef PILHA
 #define PILHA
 #define CAP 10
-#define MAX 101
+#define MAX 100
 
 
 //Pilha será usada para o histórico dos pacientes
@@ -20,7 +20,7 @@ Pilha *pilhaCriar();
 void pilhaApagar(Pilha *h);
 
 void empilhar(Pilha *h, char proc[MAX]);
-bool desempilhar(Pilha *h);
+char* desempilhar(Pilha *h);
 int pilhaSize(Pilha *h);
 bool pilhaVazia(Pilha *h);
 int pilhaTamanho(Pilha *h);

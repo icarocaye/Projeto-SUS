@@ -38,8 +38,7 @@ char *desempilhar(Pilha *h) {
     char *aux = malloc(strlen(topo)+1);
 
     strcpy(aux,topo);
-
-    free(topo);
+    strcpy(h->procedimentos[h->tamanho - 1],"");
 
     h->tamanho--; //diminui o tamanho, vai sobrescrever a string desempilhada
     return aux;

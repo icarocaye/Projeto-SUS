@@ -58,6 +58,9 @@ void inserirPaciente(Registro *registro_paciente, Lista *l){
 
 Paciente *buscarPaciente(int id, Lista *l)
 {   
+    if(listaVazia(l))
+        return NULL;
+
     Registro *r = l->inicio;
     while(r!=NULL && r->paciente->id!=id)
         r=r->prox;
@@ -69,6 +72,9 @@ Paciente *buscarPaciente(int id, Lista *l)
 }
 Registro *buscarRegistro(int id, Lista *l)
 {   
+    if(listaVazia(l))
+        return NULL;
+        
     Registro *r = l->inicio;
     while(r!=NULL && r->paciente->id!=id)
         r=r->prox;
@@ -102,16 +108,14 @@ Paciente* apagarPaciente(int id, Lista *l)
     // caso seja o primeiro nó
     if (r == l->inicio) {
         l->inicio = r->prox;
-        printf("\nremovido do inicio\n");
     } else {
         aux->prox = r->prox;
-        printf("\nremovido do meio\n");
+   
     } 
 
     // caso seja o último nó
     if (r == l->topo) {
         l->topo = aux;
-        printf("\nremovido do topo\n");
     }
     
     Paciente *p = r->paciente; // guarda o paciente
@@ -127,9 +131,17 @@ void listarPacientes(Lista *l)
     Registro *r = l->inicio;
     while(r!=NULL)
     {
-        printf("\n Paciente (id=%d) \n ---------\n nome: %s \n historico: lorem ipsilum lorem ipsilum \n",
+        printf("\nPaciente (id=%d) \n ---------\n nome: %s  \n",
         r->paciente->id, r->paciente->nome);\
-        
+        Pilha *hist = r->historico;
+        if(hist->tamanho>0){
+            printf("\nhistórico:\n");
+            
+            for(int i = 0;i<hist->tamanho;i++){
+                printf(" %d -- %s \n",i+1,hist->procedimentos[i]);
+            }
+        }else
+            printf("Paciente sem histórico");
         r=r->prox;
     }
 

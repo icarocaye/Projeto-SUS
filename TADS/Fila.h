@@ -1,6 +1,9 @@
 #include "Pilha.h"
+
 #ifndef FILA
 #define FILA
+
+#define TAMANHO_MAX 150
 
 typedef struct {
     char *nome;
@@ -8,14 +11,13 @@ typedef struct {
 } Paciente;
 
 
-
 //Registro conterá 
 
 
 //Fila servirá como a fila de espera do hospital
 typedef struct Fila {
-    struct Registro *head;
-    struct Registro *tail;
+    struct Registro *inicio;
+    struct Registro *fim;
     int tamanho;
 } Fila;
 
@@ -35,8 +37,13 @@ Fila *filaCriar();
 void filaApagar(Fila *f);
 
 int filaSize(Fila *f);
+
+bool filaCheia(Fila *f);
 bool filaVazia(Fila *f);
 void enfileirar(Fila *f, struct Registro *n);
-bool desenfileirar(Fila *f, struct Registro *removido);
+bool desenfileirar(Fila *f);
+void mostrar_fila(Fila *f);
+
+struct Registro* fila_inicio(Fila *f);
 
 #endif
