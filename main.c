@@ -102,7 +102,7 @@ int main()
 
                 apagarPaciente(id,registros);
 
-                printf("\n\n --- PACIENTE REMOVIDO DOS REGISTROS --- \n\n")
+                printf("\n\n --- PACIENTE REMOVIDO DOS REGISTROS --- \n\n");
 
 
             break;
