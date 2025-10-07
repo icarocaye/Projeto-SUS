@@ -5,7 +5,6 @@
 #include "./TADS/Lista.h"
 
 
-
 int main()
 {   
 
@@ -13,32 +12,31 @@ int main()
     Fila *fila_de_espera = filaCriar();
     Lista *registros = criarLista();
 
-    printf("Ola, Bem vindo ao sistema de gerenciamento de saude!!\n");
-
-
+    printf("Olá, Bem-vindo ao sistema de gerenciamento de saúde!!\n");
     
    
     do{
         //variaveis que serao utilizadas nos casos abaixo
         int id; //id paciente
-        char nome[120]; //nome paciente
-        char procedimento[100]; //procedimento historico
+        char nome[NOME_MAX]; //nome paciente
+        char procedimento[MAX]; //procedimento historico
         Paciente *paciente; // variavel para armazenar paciente;
         Registro *busca; //variavel para armazenar registro;
         char prosseguir; 
 
 
         printf(
-            "\nOpcoes:\n"
-            "================\n"
+            "\nMENU:\n"
+            "=============================================\n"
             "1. Registrar paciente\n"
-            "2. Dar alta ao paciente\n"
+            "2. Registrar óbito de paciente\n"
             "3. Adicionar procedimento ao histórico médico\n"
             "4. Desfazer procedimento do histórico médico\n"
             "5. Chamar paciente para atendimento\n"
             "6. Mostrar fila de espera\n"
             "7. Mostrar histórico do paciente\n"
             "8. Sair\n"
+            "=============================================\n"
         );
         scanf("%d",&c);
 
@@ -49,6 +47,7 @@ int main()
             case 1:
 
                 printf(
+                    "====================\n"
                     "REGISTRO DE PACIENTE!\n"
                     "====================\n"
                 );
@@ -64,52 +63,56 @@ int main()
                 }
 
                 printf("Entre com o nome do paciente: ");
-                scanf(" %199[^\n]",nome);
+                scanf(" %120[^\n]",nome);
 
-                
               
                 //adicionar paciente na lista
                 Paciente *novo_paciente = pacienteCriar(nome, id);
                 Pilha *historico = pilhaCriar();
                 
-                Registro *registro_paciente = criarRegistro(novo_paciente, historico);
-                inserirPaciente(registro_paciente, registros);
+                Registro *registro_lista = RegistroCriar(novo_paciente, historico);
+                listaInserir(registro_lista, registros);
 
                 //adicionar paciente na fila de espera
-                enfileirar(fila_de_espera, registro_paciente);
+                Registro *registro_fila = RegistroCriar(novo_paciente, historico);
+                enfileirar(fila_de_espera, registro_fila);
 
                 printf("\n PACIENTE INSERIDO NA FILA DE ESPERA E NOS REGISTROS! \n");
 
             break;
+
             //DAR ALTA AO PACIENTE
             case 2: 
                 
                 printf("Entre com o id do paciente que deseja declarar óbito: ");
                 scanf(" %d", &id);
 
-                
-                //verificar se paciente esta na fila 
-                
+                //verificar se paciente está na lista
                 paciente = buscarPaciente(id,registros);
-
                 if(paciente == NULL)
                 {
-                    printf("\n\n !!! PACIENTE NÃO EXISTE !!! \n\n");
+                    printf("\n\n !!! PACIENTE NÃO ENCONTRADO !!! \n\n");
                     break;
                 }
                 
-                printf("Dar alta ao paciente (ID = %d) -> %s (S/N)\n", paciente->id, paciente->nome);
+                //verificar se paciente esta na fila 
+                if (filaBuscar(fila_de_espera, id) != NULL)
+                {
+                    printf("ERRO: Impossível remover paciente, pois ele ainda não foi atendido!");
+                    break;
+                }
+
+                printf("Remover paciente (ID = %d) -> %s (S/N)\n", paciente->id, paciente->nome);
                 do {
                     scanf(" %c", &prosseguir);
                 } while(prosseguir != 'N' && prosseguir != 'n' && prosseguir != 'S' && prosseguir != 's' );
 
-                apagarPaciente(id,registros);
+                listaRemover(id,registros);
 
                 printf("\n\n --- PACIENTE REMOVIDO DOS REGISTROS --- \n\n");
 
-
-
             break;
+
             //ADICIONAR PROCEDIMENTO AO HISTORICO MEDICO
             case 3:
             //entradas
@@ -128,7 +131,7 @@ int main()
                 printf("Paciente (id = %d) --> %s encontrado, entre com o procedimento\n a ser adicionado no histórico\n(MÁXIMO DE 100 CARACTÉRES)\n: "
                 ,paciente->id, paciente->nome);
                 //Adiciona procedimento
-                scanf(" %99[^\n]",procedimento);
+                scanf(" %101[^\n]",procedimento);
 
                 //se fila estiver cheia empilhar não empilha
                 empilhar(busca->historico,procedimento);
@@ -136,8 +139,8 @@ int main()
                 printf("ADICIONADO AO HISTÓRICO");
 
             break;
+
             //DESFAZER PROCEDIMENTO DO HISTORICO MEDICO
-            
             case 4: 
                 printf("O último procedimento do histórico do paciente será removido\n ");
                

@@ -2,18 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-//funcoes registro
-
-
-Registro *criarRegistro(Paciente *paciente, Pilha *historico)
-{
-    Registro *reg = malloc(sizeof(Registro)); 
-    reg->paciente = paciente;
-    reg->historico = historico;
-    reg->prox = NULL;
-    return reg;
-}
-
 //funcoes Lista
 Lista* criarLista(){
     Lista* lista = malloc(sizeof(Lista));
@@ -42,7 +30,7 @@ bool listaVazia(Lista *l){
     return l->tamanho == 0;
 }
 //insere registro de paciente no fim da lista
-void inserirPaciente(Registro *registro_paciente, Lista *l){
+void listaInserir(Registro *registro_paciente, Lista *l){
     if(l== NULL)
         return;
     if(l->inicio == NULL)   
@@ -85,16 +73,16 @@ Registro *buscarRegistro(int id, Lista *l)
     return NULL;
 }
 
-Paciente* apagarPaciente(int id, Lista *l)
+bool listaRemover(int id, Lista *l)
 {   
     if (l == NULL || listaVazia(l)) {
-        return NULL; // lista vazia
+        return false; // lista vazia
     }
 
     Registro *r = l->inicio;
     Registro *aux = NULL;
 
-    // procura o registro
+    // procura o nó anterior ao registro
     while (r != NULL && r->paciente->id != id) {
         aux = r;
         r = r->prox;
@@ -118,11 +106,12 @@ Paciente* apagarPaciente(int id, Lista *l)
         l->topo = aux;
     }
     
-    Paciente *p = r->paciente; // guarda o paciente
+    pacienteApagar(r->paciente);
+    pilhaApagar(r->historico);
     free(r); // libera o registro
     l->tamanho--;
 
-    return p;
+    return true;
 }
 
 
