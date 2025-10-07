@@ -3,7 +3,7 @@
 #ifndef PILHA
 #define PILHA
 #define CAP 10
-#define MAX 100
+#define MAX 101
 
 
 //Pilha será usada para o histórico dos pacientes

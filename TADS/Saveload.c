@@ -106,7 +106,7 @@ bool saveFila(FILE *fp, Fila *f)
         return false;
     }
     //salvar os nós!
-    Registro *aux = f->head;
+    Registro *aux = f->inicio;
     while (aux != NULL) {
         saveReg(fp, aux);
         aux = aux->prox;
@@ -232,7 +232,7 @@ bool lerFila(FILE *fp, Fila*f)
         return false;
     }
     //ler os nós, com base no tamanho da fila!
-    Registro *aux = f->head;
+    Registro *aux = f->inicio;
     for (int i = 0; i < f->tamanho; i++) {
         lerReg(fp, aux);
         aux = aux->prox;

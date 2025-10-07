@@ -22,6 +22,8 @@ Paciente *pacienteCriar(int id, char nome[50]);
 void pacienteApagar(Paciente *p);
 ```
 
+OBS: por praticidade, o TAD Paciente foi incluído em [Registro.h](Registro.h), pois é somente usado nele.
+
 ## Pilha
 Pilha representa o histórico de procedimentos de um paciente. Assim como Paciente, ele também será incroporado nos próximos TADs, no entanto, ele também será acessado diretamente pelo cliente para adicionar e remover procedimentos. A Pilha guarda até 10 procedimentos por meio de um vetor de strings (essencialmente, uma matriz de chars) e a quantidade de procedimentos que contém, sua estrutura é a seguinte:
 

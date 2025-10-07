@@ -6,48 +6,11 @@
 #include "Fila.h"
 #include "Lista.h"
 
-
-
-//funções de Paciente
-
-Paciente *pacienteCriar(char *nome, int id) {
-  
-    Paciente *p = (Paciente *)malloc(sizeof(Paciente));
-    if(p == NULL){
-        perror("Erro ao alocar paciente");
-        exit(1);
-    }
-    p->nome = malloc(strlen(nome)+1);
-    if(p->nome == NULL)
-    {
-        perror("Erro ao alocar nome do paciente");
-        exit(1);
-    }
-    strcpy(p->nome,nome);
-    p->id = id;
-
-    return p;
-}
-
-void pacienteApagar(Paciente *p) {
-    free(p);
-    return;
-}
-
-//funções de Registro
-
-
-void RegistroApagar(Registro *n) {
-    pacienteApagar(n->paciente);
-    pilhaApagar(n->historico);
-    free(n);
-    
-    return;
-}
-
-
 //funções de Fila
-
+/*
+Pré-Cond: há memória disponível na heap
+Pós-Cond: aloca uma Fila e a inicia com head e tail em NULL e tamanho 0, retornando um ponteiro para ela
+*/
 Fila *filaCriar() {
     Fila *f = (Fila *)malloc(sizeof(Fila));
     f->inicio = NULL;
@@ -57,22 +20,40 @@ Fila *filaCriar() {
     return f;
 }
 
+/*
+Pré-Cond: f aponta para uma Fila que existe
+Pós-Cond: desaloca a Fila da memória
+*/
 void filaApagar(Fila *f) {
     free(f);
     return;
 }
 
+/*
+Pré-Cond: f aponta para Fila que existe
+Pós-Cond: retorna o tamanho da fila
+*/
 int filatamanho(Fila *f) {
     return f->tamanho;
 }
 
+/*
+Pré-Cond: f aponta para Fila que existe
+Pós-Cond: retorna bool que indica se a fila está vazia
+*/
 bool filaVazia(Fila *f) {
     return (f->inicio == NULL) ? true : false;
 }
+
 bool filaCheia(Fila *f)
 {
     return f->tamanho == TAMANHO_MAX;
 }
+
+/*
+Pré-Cond: Fila e Registro existem
+Pós-Cond: adiciona um nó no final da Fila e atualiza tail. Se a fila estiver vazia, atualiza também head
+*/
 void enfileirar(Fila *f, Registro *n) {
     if(filaCheia(f))
     {
@@ -92,6 +73,10 @@ void enfileirar(Fila *f, Registro *n) {
     return;
 }
 
+/*
+Pré-Cond: Fila existe e não é vazia
+Pós-Cond: retira o primeiro elemento da fila, fazendo ela "andar" e retorna o elemento retirado
+*/
 bool desenfileirar(Fila *f) {
     if (filaVazia(f)) {
         printf("Fila vazia!\n");
@@ -106,6 +91,15 @@ bool desenfileirar(Fila *f) {
     return true;
 }
 
+Registro *filaBuscar(Fila *f, int id)
+{
+    Registro *aux = fila_inicio(f);
+    while (aux != NULL) {
+        if (aux->paciente->id == id) return aux;
+        aux = aux->prox;
+    }
+    return NULL;
+}
 
 void mostrar_fila(Fila *f)
 {   
@@ -118,6 +112,7 @@ void mostrar_fila(Fila *f)
         aux = aux->prox;
     }
 }
+
 Registro *fila_inicio(Fila *f)
 {   
     return f->inicio;
