@@ -22,7 +22,7 @@ Paciente *pacienteCriar(int id, char nome[50]);
 void pacienteApagar(Paciente *p);
 ```
 
-OBS: por praticidade, o TAD Paciente foi incluído em [Registro.h](Registro.h), pois é somente usado nele.
+OBS: por praticidade, o TAD Paciente foi incluído em [Registro.h](Registro.h), pois é usado somente nele.
 
 ## Pilha
 Pilha representa o histórico de procedimentos de um paciente. Assim como Paciente, ele também será incroporado nos próximos TADs, no entanto, ele também será acessado diretamente pelo cliente para adicionar e remover procedimentos. A Pilha guarda até 10 procedimentos por meio de um vetor de strings (essencialmente, uma matriz de chars) e a quantidade de procedimentos que contém, sua estrutura é a seguinte:
@@ -67,7 +67,66 @@ void apagarRegistro(Registro *registro);
 ```
 
 ## Fila
+A Fila foi implementada dinamicamente de forma encadeada, usando o TAD Registro como nó. Por isso, não possui de fato um tamanho máximo, e poderia ser expandida até o esgotamento da memória. No entanto, como a proposta do projeto pede que a fila tenha um tamanho finito, foi definido um tamanho máximo de 150 e uma função filaCheia(), que verifica se esse tamanho foi atingido. Dessa forma, a estutura da fila se configura da seguinte forma:
+
+```c
+#define TAMANHO_MAX 150
+
+typedef struct Fila {
+    Registro *inicio;
+    Registro *fim;
+    int tamanho;
+} Fila;
+```
+
+Como registro é alocado dinamicamente, a fila guarda apenas um ponteiro para o inicio e um para o final da fila, para facilitar a inserção, além do tamanho atual da fila, para controle.  
+
+Sua funções seguem o padrão de uma fila, permitindo a inserção no final da estrutura e a remoção no início. Além disso, foi implementada uma função para buscar um registro na fila por meio de um id informado, bem como uma função para imprimir a fila na tela, do início para o fim, tudo isso para contribuir com a sua integração no sistema final. Também há funções de consulta, a fim de seguir o conceito de evitar o acesso direto à estrutura.
+
+```c
+Fila *filaCriar();
+void filaApagar(Fila *f);
+
+bool filaCheia(Fila *f);
+bool filaVazia(Fila *f);
+Registro* fila_inicio(Fila *f);
+void enfileirar(Fila *f, Registro *n);
+bool desenfileirar(Fila *f);
+Registro *filaBuscar(Fila *f, int id);
+void mostrar_fila(Fila *f);
+```
 
 ## Lista
 
 ## Saveload (IO)
+Por fim, temos o TAD que controla a leitura e a gravação das estruturas em arquivos. No projeto, chamamos esse TAD de Saveload, mas outro nome comum para ele seria IO(input/output). Diferentemente dos outros TADs, ele não possui uma estrutura própria, mas apenas funções para salvar as outras estruturas que já definimos.  
+
+As funções públicas do TAD são apenas essas:
+
+```c
+//funções para gravar no arquivo
+
+bool saveFila(FILE *f, Fila *);
+bool saveLista(FILE *f, Lista *l);
+
+//funções para ler um arquivo
+
+bool lerFila(FILE *f, Fila *);
+bool lerLista(FILE *f, Lista *l);
+```
+
+No entanto, dentro da implementação foram definidas funções para salvar Paciente, Pilha e Registro, que forma utilizadas internamente nas funções públicas, de forma que essas estruturas ficam incluídas no salvamento e na leitura de Fila e Lista.  
+
+Por fim, também foram definidos códigos de erro, para ajudar a localizar a natureza e a estrutura à qual estão atrelados quaisquer eventuais problemas tanto no salvamento quanto na leitura, são eles:
+
+```c
+/*
+TRATAMENTO DE ERRO
+Em caso de erro, as funções retornam false e exibem uma mensagem de erro na tela, dizendo em qual estrutura 
+o erro se deu e o código dele, que segue esse dicionário:
+Código 0 - um dos ponteiros recebidos pela função é aponta para NULL e, portanto, não pode ser acessado.
+Código 1 - erro ao salvar um int.
+Código 2 - erro ao salvar um vetor.
+Código 3 - erro ao salvar um ponteiro.
+*/
+```
