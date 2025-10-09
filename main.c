@@ -13,12 +13,21 @@ int main()
     int c;
     Fila *fila_de_espera = filaCriar();
     Lista *registros = criarLista();
-    // Define o nome do arquivo que guardará os dados
     const char* NOME_ARQUIVO = "prontosocorro.dat";
+    FILE *arquivo;
 
-    // Carrega os dados salvos anteriormente ao iniciar o programa
-    saveload_carregar_dados(registros, fila_de_espera, NOME_ARQUIVO);
-
+    // --- SEÇÃO DE CARREGAMENTO ---
+    arquivo = fopen(NOME_ARQUIVO, "rb"); // Abre para leitura binária
+    if (arquivo != NULL) {
+        printf("Carregando dados de %s...\n", NOME_ARQUIVO);
+        lerLista(arquivo, registros);
+        lerFila(arquivo, registros, fila_de_espera);
+        fclose(arquivo);
+        printf("Dados carregados com sucesso!\n");
+    } else {
+        printf("Arquivo de dados '%s' nao encontrado. Iniciando com sistema vazio.\n", NOME_ARQUIVO);
+    }
+    
     printf("Olá, Bem-vindo ao sistema de gerenciamento de saúde!!\n");
     
    
@@ -255,8 +264,17 @@ int main()
 
     listarPacientes(registros);
 
-    // Salva os dados no arquivo antes de encerrar o programa
-    saveload_salvar_dados(registros, fila_de_espera, NOME_ARQUIVO);
+    // --- SEÇÃO DE SALVAMENTO ---
+    arquivo = fopen(NOME_ARQUIVO, "wb"); // Abre para escrita binária
+    if (arquivo == NULL) {
+        perror("Erro crítico ao abrir arquivo para salvar dados");
+    } else {
+        printf("\nSalvando dados em %s...\n", NOME_ARQUIVO);
+        saveLista(arquivo, registros);
+        saveFila(arquivo, fila_de_espera);
+        fclose(arquivo);
+        printf("Dados salvos com sucesso!\n");
+    }
     
     filaApagar(fila_de_espera);
     apagarLista(registros);
