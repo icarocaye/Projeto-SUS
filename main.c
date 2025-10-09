@@ -14,15 +14,7 @@ int main()
     Fila *fila_de_espera = filaCriar();
     Lista *registros = criarLista();
 
-    //importar lista e fila
-    FILE *fr = fopen("dados.bin", "rb");
-    if (fr == NULL) {
-        printf("Novo banco de dados criado!\n");
-    } else {
-        lerLista(fr, registros);
-        lerFila(fr, registros, fila_de_espera);
-        fclose(fr);
-    }
+    //INSERIR LEITURA DE ARQUIVO COM FUNÇÕES DE SAVELOAD.H AQUI
     
 
     printf("Olá, Bem-vindo ao sistema de gerenciamento de saúde!!\n");
@@ -261,16 +253,8 @@ int main()
 
     listarPacientes(registros);
 
-    //salvar lista e fila
-    FILE *fs = fopen("dados.bin", "wb");
-    if (fs == NULL) {
-        printf("Erro ao acessar banco de dados!\n");
-    } else {
-        saveLista(fs, registros);
-        saveFila(fs, fila_de_espera);
-        fclose(fs);
-    }
-
+    //INSERIR GRAVAÇÃO EM ARQUIVO COM FUNÇÕES DE SAVELOAD.H AQUI
+    
     filaApagar(fila_de_espera);
     apagarLista(registros);
     
