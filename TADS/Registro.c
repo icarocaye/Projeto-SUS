@@ -6,6 +6,11 @@
 
 //funções de Paciente
 
+Paciente *pacienteEmBranco() {
+    Paciente *p = (Paciente *)malloc(sizeof(Paciente));
+    return p;
+}
+
 Paciente *pacienteCriar(char nome[NOME_MAX], int id) {
   
     Paciente *p = (Paciente *)malloc(sizeof(Paciente));

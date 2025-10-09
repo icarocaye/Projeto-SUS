@@ -3,88 +3,53 @@
 #include <stdbool.h>
 #include "Saveload.h"
 
-/*
-TRATAMENTO DE ERRO
-Em caso de erro, as funções retornam false e exibem uma mensagem de erro na tela, dizendo em qual estrutura 
-o erro se deu e o código dele, que segue esse dicionário:
-Código 0 - um dos ponteiros recebidos pela função é aponta para NULL e, portanto, não pode ser acessado.
-Código 1 - erro ao salvar um int.
-Código 2 - erro ao salvar um vetor.
-Código 3 - erro ao salvar um ponteiro.
-*/
-
 //funções para gravar no arquivo
 
-//serão usadas dentro de saveNo:
+//serão usadas dentro de saveLista:
 
 /*
-Pré-Cond: o Paciente existe, o ponteiro para arquivo foi criado no modo wb
-Pós-Cond: Escreve os dados do Paciente de forma adjacente no arquivo binário
+Pré-Cond: o Paciente existe, a Pilha existe, o ponteiro para arquivo foi criado no modo wb
+Pós-Cond: Escreve os dados do Paciente e de seu histórico de forma adjacente no arquivo binário
 */
-bool savePac(FILE *fp, Paciente *p)
+bool savePac(FILE *fp, Paciente *p, Pilha *h)
 {
     if (p == NULL || fp == NULL) {
-        printf("Erro ao salvar Paciente! Código 0");
+        printf("Erro ao salvar Paciente!\n");
         return false;
     }
-    //salva o id do paciente
-    if (fwrite(&(p->id), sizeof(int), 1, fp) < 1) {
-        printf("Erro ao salvar Paciente! Código 1");
-        return false;
-    }
-    //salva o nome do paciente com, no máximo, 49 caracteres (e 1 de parada)
-    if (fwrite(&(p->nome), sizeof(char[50]), 1, fp) < 1) {
-        printf("Erro ao salvar Paciente! Código 2");
-        return false;
-    }
+    //salva o paciente
+    if (fwrite(&(p->id), sizeof(int), 1, fp) < 1) return false;
+    if (fwrite(&(p->nome), sizeof(char), NOME_MAX, fp) < 1) return false;
+
+    // salva o histórico logo em seguida
+    if (fwrite(&(h->procedimentos), sizeof(char[MAX]), CAP, fp) < 1) return false;
+    if (fwrite(&(h->tamanho), sizeof(int), 1, fp) < 1) return false;
 
     return true;
 }
 
 /*
-Pré-Cond: a Pilha existe, o ponteiro para arquivo foi criado no modo wb
-Pós-Cond: Escreve os dados da Pilha de forma adjacente no arquivo binário
+Pré-Cond: a Lista existe e não é NULL, o ponteiro para arquivo foi criado no modo wb
+Pós-Cond: Escreve no arquivo o tamanho da Lista e, depois, usa a função saveReg para salvar cada Nó
 */
-bool saveHist(FILE *fp, Pilha *h)
+bool saveLista(FILE *fp, Lista *L)
 {
-    if (h == NULL || fp == NULL) {
-        printf("Erro ao salvar histórico! Código 0");
-        return false;
-    }
-    //salva os 10 procedimentos, cada um sendo um vetor de 101 chars, no arquivo f
-    if (fwrite(&(h->procedimentos), sizeof(char[MAX]), CAP, fp) < CAP) {
-        printf("Erro ao salvar histórico! Código 2");
-        return false;
-    }
-    //salva o tamanho usado do histórico
-    if (fwrite(&(h->tamanho), sizeof(int), 1, fp) < 1) {
-        printf("Erro ao salvar histórico! Código 1");
+    if (L == NULL || fp == NULL) {
+        printf("Erro ao salvar Lista!\n");
         return false;
     }
 
-    return true;
-}
-
-//será usada dentro de saveFila:
-/*
-Pré-Cond: o Nó existe e não é NULL, o ponteiro para arquivo foi criado no modo wb
-Pós-Cond: usa as funções anteriores para salvar o Paciente e o Histórico do Nó e, depois, salva o ponteiro para o próximo Nó
-*/
-bool saveReg(FILE *fp, Registro *n)
-{  
-    if (n == NULL || fp == NULL) {
-        printf("Erro ao salvar Nó! Código 0");
+    //salvar o tamanho da lista primeiro, para facilitar a leitura
+    if (fwrite(&(L->tamanho), sizeof(int), 1, fp) < 1) {
+        printf("Erro ao salvar Lista!\n");
         return false;
     }
-    //salvar o Paciente e o Histórico
-    if (savePac(fp, n->paciente) == false)
-        return false;
-    if (saveHist(fp, n->historico) == false)
-        return false;
-    //salvar o ponteiro para o próximo Nó
-    if (fwrite(&(n->prox), sizeof(Registro *), 1, fp) < 1) {
-        printf("Erro ao salvar Nó! Código 3");
-        return false;
+
+    //salvar os nós!
+    Registro *aux = L->inicio;
+    while (aux != NULL) {
+        savePac(fp, aux->paciente, aux->historico);
+        aux = aux->prox;
     }
 
     return true;
@@ -97,151 +62,38 @@ Pós-Cond: Escreve no arquivo o tamanho da fila e, depois, usa a função saveRe
 bool saveFila(FILE *fp, Fila *f)
 {
     if (f == NULL || fp == NULL) {
-        printf("Erro ao salvar Fila! Código 0");
+        printf("Erro ao salvar Fila!\n");
         return false;
-    }
-    //salvar o tamanho da fila primeiro, para facilitar a leitura
-    if (fwrite(&(f->tamanho), sizeof(int), 1, fp) < 1) {
-        printf("Erro ao salvar Fila! Còdigo 1");
-        return false;
-    }
-    //salvar os nós!
-    Registro *aux = f->inicio;
-    while (aux != NULL) {
-        saveReg(fp, aux);
-        aux = aux->prox;
     }
 
+    //salvar somente o tamanho da fila, que é a úunica coisa que será usada na leitura
+    if (fwrite(&(f->tamanho), sizeof(int), 1, fp) < 1) return false;
     return true;
 }
 
-//saveLista é quase igual ao saveFila
-/*
-Pré-Cond: a Lista existe e não é NULL, o ponteiro para arquivo foi criado no modo wb
-Pós-Cond: Escreve no arquivo o tamanho da Lista e, depois, usa a função saveReg para salvar cada Nó
-*/
-bool saveLista(FILE *fp, Lista *L)
-{
-    if (L == NULL || fp == NULL) {
-        printf("Erro ao salvar Lista! Código 0");
-        return false;
-    }
-    //salvar o tamanho da lista primeiro, para facilitar a leitura
-    if (fwrite(&(L->tamanho), sizeof(int), 1, fp) < 1) {
-        printf("Erro ao salvar Fila! Código 1");
-        return false;
-    }
-    //salvar os nós!
-    Registro *aux = L->inicio;
-    while (aux != NULL) {
-        saveReg(fp, aux);
-        aux = aux->prox;
-    }
-
-    return true;
-}
 
 //funções para ler um arquivo
 
-//serão usadas dentro de lerNo:
+//serão usadas dentro de lerLista:
 /*
-Pré-Cond: o Paciente existe, o ponteiro para arquivo foi criado no modo rb
-Pós-Cond: Lê os dados do Paciente de forma adjacente no arquivo binário
+Pré-Cond: o Paciente existe, a Pilha existe, o ponteiro para arquivo foi criado no modo rb
+Pós-Cond: Lê os dados do Paciente e de seu Histórico de forma adjacente no arquivo binário
 */
-bool lerPac(FILE *fp, Paciente *p)
+bool lerPac(FILE *fp, Paciente *p, Pilha *h)
 {
-    if (p == NULL || fp == NULL) {
-        printf("Erro ao importar paciente! Código 0");
-        return false;
-    }
+    if (p == NULL || fp == NULL) return false;
+
     //ler o id do paciente
-    if (fread(&(p->id), sizeof(int), 1, fp) < 1) {
-        printf("Erro ao importar paciente! Código 1");
-        return false;
-    }
-    //ler o nome do paciente
-    if (fread(&(p->nome), sizeof(char[50]), 1, fp) < 1) {
-        printf("Erro ao importar paciente! Código 2");
-        return false;
-    }
+    if (fread(&(p->id), sizeof(int), 1, fp) < 1) return false;
+    if (fread(&(p->nome), sizeof(char), NOME_MAX, fp) < 1) return false;
+
+    //ler o histórico logo em seguida
+    if (fread(&(h->procedimentos), sizeof(char[MAX]), CAP, fp) < 1) return false;
+    if (fread(&(h->tamanho), sizeof(int), 1, fp) < 1) return false;
 
     return true;
 }
 
-/*
-Pré-Cond: a Pilha existe, o ponteiro para arquivo foi criado no modo rb
-Pós-Cond: Lê os dados da Pilha de forma adjacente no arquivo binário
-*/
-bool lerHist(FILE *fp, Pilha *h)
-{
-    if (h == NULL || fp == NULL) {
-        printf("Erro ao importar histórico! Código 0");
-        return false;
-    }
-    //lê os 10 procedimentos, cada um sendo um vetor de 101 chars, no arquivo f
-    if (fread(&(h->procedimentos), sizeof(char[MAX]), CAP, fp) < CAP) {
-        printf("Erro ao importar histórico! Código 2");
-        return false;
-    }
-    if (fread(&(h->tamanho), sizeof(int), 1, fp) < 1) {
-        printf("Erro ao importar histórico! Código 1");
-        return false;
-    }
-
-    return true;
-}
-
-//será usada dentro de lerFila:
-/*
-Pré-Cond: o Nó existe e não é NULL, o ponteiro para arquivo foi criado no modo rb
-Pós-Cond: usa as funções anteriores para ler o Paciente e o Histórico do Nó (Registro) e, depois, lê o ponteiro para o próximo Nó
-*/
-bool lerReg(FILE *fp, Registro *n)
-{
-    if (n == NULL || fp == NULL) {
-        printf("Erro ao importar Nó! Código 0");
-        return false;
-    }
-    //ler o Paciente e o Histórico
-    if (lerPac(fp, n->paciente) == false)
-        return false;
-    if (lerHist(fp, n->historico) == false)
-        return false;
-    //ler o ponteiro para o próximo Nó
-    if (fread(&(n->prox), sizeof(Registro *), 1, fp) < 1) {
-        printf("Erro ao importar Nó! Código 3");
-        return false;
-    }
-
-    return true;
-}
-
-/*
-Pré-Cond: a Fila existe e não é NULL, o ponteiro para arquivo foi criado no modo rb
-Pós-Cond: Lê no arquivo o tamanho da fila e, depois, usa a função lerReg para salvar cada Nó
-*/
-bool lerFila(FILE *fp, Fila*f)
-{
-    if (f == NULL || fp == NULL) {
-        printf("Erro ao importar Fila! Código 0");
-        return false;
-    }
-    //ler o tamanho da fila primeiro
-    if (fread(&(f->tamanho), sizeof(int), 1, fp) < 1) {
-        printf("Erro ao salvar Fila! Código 1");
-        return false;
-    }
-    //ler os nós, com base no tamanho da fila!
-    Registro *aux = f->inicio;
-    for (int i = 0; i < f->tamanho; i++) {
-        lerReg(fp, aux);
-        aux = aux->prox;
-    }
-
-    return true;
-}
-
-//assim como nas funções de salvar, a função lerLista é quase igual a lerFila
 /*
 Pré-Cond: a Lista existe e não é NULL, o ponteiro para arquivo foi criado no modo rb
 Pós-Cond: Lê no arquivo o tamanho da lista e, depois, usa a função lerReg para salvar cada Nó
@@ -249,19 +101,57 @@ Pós-Cond: Lê no arquivo o tamanho da lista e, depois, usa a função lerReg pa
 bool lerLista(FILE *fp, Lista *L)
 {
     if (L == NULL || fp == NULL) {
-        printf("Erro ao importar Fila! Código 0");
+        printf("Erro ao importar Lista!\n");
+        return false;
+    }
+
+    //ler o tamanho da lista primeiro
+    if (fread(&(L->tamanho), sizeof(int), 1, fp) < 1) {
+        printf("Erro ao importar Lista!\n");
+        return false;
+    }
+
+    //ler os nós (paciente + histórico), com base no tamanho da fila!
+    for (int i = 0; i < L->tamanho; i++) {
+        Paciente *p = pacienteEmBranco();
+        Pilha *h = pilhaCriar();
+
+        if (!lerPac(fp, p, h)) {
+            printf("Erro ao importar Paciente!\n");
+            return false;
+        }
+
+        Registro *atual = RegistroCriar(p, h);
+        listaInserir(atual, L);
+    }
+
+    return true;
+}
+
+/*
+Pré-Cond: a Fila existe, não é NULL e está vazia, a Lista existe e não é NULL e a função lerLista JÁ FOI CHAMADA o ponteiro para arquivo foi criado no modo rb
+Pós-Cond: Lê no arquivo o tamanho n da fila e, depois, anda até os últimos n elementos da lista e lê até o fianl
+*/
+bool lerFila(FILE *fp, Lista *L, Fila*f)
+{
+    if (f == NULL || fp == NULL || L == NULL) {
+        printf("Erro ao importar Fila!\n");
         return false;
     }
     //ler o tamanho da fila primeiro
-    if (fread(&(L->tamanho), sizeof(int), 1, fp) < 1) {
-        printf("Erro ao salvar Fila! Código 1");
-        return false;
-    }
-    //ler os nós, com base no tamanho da fila!
-    Registro *aux = L->inicio;
-    for (int i = 0; i < L->tamanho; i++) {
-        lerReg(fp, aux);
-        aux = aux->prox;
+    fread(&(f->tamanho), sizeof(int), 1, fp);
+
+    if (f->tamanho > 0 && f->tamanho <= L->tamanho) {
+        //caminha até o (tamanho - n)-ésimo registro
+        Registro *aux = L->inicio;
+        for (int i = 0; i < L->tamanho - f->tamanho; i++)
+            aux = aux->prox;
+
+        //adiciona os últimos n registros na fila
+        while (aux != NULL) {
+            enfileirar(f, aux);
+            aux = aux->prox;
+        }
     }
 
     return true;

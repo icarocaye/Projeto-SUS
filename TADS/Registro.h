@@ -4,8 +4,8 @@
 #define NOME_MAX 120
 
 typedef struct {
-    char nome[NOME_MAX];
     int id;
+    char nome[NOME_MAX];
 } Paciente;
 
 //Estrutura de registro da lista/fila de pacientes
@@ -18,7 +18,7 @@ typedef struct Registro{
 
 
 //funções de Paciente
-
+Paciente *pacienteEmBranco();
 Paciente *pacienteCriar(char *nome, int id);
 bool pacienteApagar(Paciente *p);
 
