@@ -19,11 +19,10 @@ void filaApagar(Fila *f);
 
 bool filaCheia(Fila *f);
 bool filaVazia(Fila *f);
+Registro* fila_inicio(Fila *f);
 void enfileirar(Fila *f, Registro *n);
 bool desenfileirar(Fila *f);
 Registro *filaBuscar(Fila *f, int id);
 void mostrar_fila(Fila *f);
-
-struct Registro* fila_inicio(Fila *f);
 
 #endif
