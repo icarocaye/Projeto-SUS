@@ -24,16 +24,22 @@ Fila *filaCriar() {
 Pré-Cond: f aponta para uma Fila que existe
 Pós-Cond: desaloca a Fila da memória
 */
-void filaApagar(Fila *f) {
+bool filaApagar(Fila *f) {
+    if (f == NULL) return false;
+
+    for (int i = 0; i < filaTamanho(f); i++) {
+        if (f->inicio != NULL)
+            desenfileirar(f);
+    }
     free(f);
-    return;
+    return true;
 }
 
 /*
 Pré-Cond: f aponta para Fila que existe
 Pós-Cond: retorna o tamanho da fila
 */
-int filatamanho(Fila *f) {
+int filaTamanho(Fila *f) {
     return f->tamanho;
 }
 
@@ -87,7 +93,7 @@ bool desenfileirar(Fila *f) {
     Registro *aux = f->inicio; 
     f->inicio = f->inicio->prox; //avança o inicio para o próximo item da fila
     RegistroApagar(aux); //apaga o antigo inicio
-
+    (f->tamanho)--;
     return true;
 }
 

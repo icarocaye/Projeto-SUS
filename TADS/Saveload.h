@@ -5,24 +5,20 @@
 #include "Fila.h"
 #include "Lista.h"
 
-/*
-TRATAMENTO DE ERRO
-Em caso de erro, as funções retornam false e exibem uma mensagem de erro na tela, dizendo em qual estrutura 
-o erro se deu e o código dele, que segue esse dicionário:
-Código 0 - um dos ponteiros recebidos pela função é aponta para NULL e, portanto, não pode ser acessado.
-Código 1 - erro ao salvar um int.
-Código 2 - erro ao salvar um vetor.
-Código 3 - erro ao salvar um ponteiro.
-*/
-
 //funções para gravar no arquivo
-
-bool saveFila(FILE *f, Fila *);
-bool saveLista(FILE *f, Lista *l);
+/*
+As funções PRECISAM ser chamadas nessa ordem! Fila só pode ser salva depois de Lista.
+Ponteiro para arquivo deve ter sido criado no modo wb.
+*/
+bool saveLista(FILE *wb, Lista *l);
+bool saveFila(FILE *wb, Fila *);
 
 //funções para ler um arquivo
-
-bool lerFila(FILE *f, Fila *);
-bool lerLista(FILE *f, Lista *l);
+/*
+As funções PRECISAM ser chamadas nessa ordem! Fila só pode ser lida depois de Lista.
+Ponteiro para arquivo deve ter sido criado no modo rb.
+*/
+bool lerLista(FILE *rb, Lista *l);
+bool lerFila(FILE *rb, Lista *L, Fila *);
 
 #endif

@@ -1,8 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include "./TADS/Pilha.h"
 #include "./TADS/Fila.h"
 #include "./TADS/Lista.h"
+#include "./TADS/Saveload.h"
 
 
 int main()
@@ -11,6 +13,9 @@ int main()
     int c;
     Fila *fila_de_espera = filaCriar();
     Lista *registros = criarLista();
+
+    //INSERIR LEITURA DE ARQUIVO COM FUNÇÕES DE SAVELOAD.H AQUI
+    
 
     printf("Olá, Bem-vindo ao sistema de gerenciamento de saúde!!\n");
     
@@ -35,7 +40,8 @@ int main()
             "5. Chamar paciente para atendimento\n"
             "6. Mostrar fila de espera\n"
             "7. Mostrar histórico do paciente\n"
-            "8. Sair\n"
+            "8. Mostrar lista de pacientes\n"
+            "9. Sair\n"
             "=============================================\n"
         );
         scanf("%d",&c);
@@ -145,7 +151,7 @@ int main()
                 printf("O último procedimento do histórico do paciente será removido\n ");
                
                 //entradas
-                printf("Entre com o id id do paciente: ");
+                printf("Entre com o id do paciente: ");
                 scanf(" %d", &id);
                 
                 //Busca registro pelo id do paciente
@@ -164,9 +170,9 @@ int main()
                 }
                 
                 paciente = busca->paciente;
-                printf("Paciente (id=%d) --> %s encontrado. tem certeza que deseja remover o último procedimento do histórico\n ",
+                printf("Paciente (id=%d) --> %s encontrado. Tem certeza que deseja remover o último procedimento do histórico?\n ",
                 paciente->id, paciente->nome);
-                printf("\n último procedimento: ( %s ) (S/N)\n ",busca->historico->procedimentos[busca->historico->tamanho - 1]);
+                printf("\nÚltimo procedimento: ( %s ) [S/N]\n ",busca->historico->procedimentos[busca->historico->tamanho - 1]);
              
                  
                 do {
@@ -174,15 +180,15 @@ int main()
                 } while(prosseguir != 'N' && prosseguir != 'n' && prosseguir != 'S' && prosseguir != 's' );
 
                 if(prosseguir == 'S' || prosseguir == 's') {
-                    char *removido = desempilhar(busca->historico);
-                    if(removido != NULL)
-                        printf("\n%s --- REMOVIDO DO HISTÓRICO DO PACIENTE\n", removido);
+                    if (desempilhar(busca->historico))
+                        printf("\nREMOVIDO DO HISTÓRICO DO PACIENTE\n");
                     else
                         printf("Histórico vazio!\n"); 
                 } 
             
                
             break;
+
             //CHAMAR PACIENTE PARA ATENDIMENTO
             case 5:
 
@@ -200,6 +206,7 @@ int main()
                 desenfileirar(fila_de_espera);  
                 
             break;
+
             //MOSTRAR FILA DE ESPERA
             case 6: 
 
@@ -208,6 +215,7 @@ int main()
                 printf("\n\n");
             break;
             //MOSTRAR HISTORICO DO PACIENTE
+
             case 7:
                 printf("Entre com o id do paciente que deseja consultar o histórico: ");
                 scanf(" %d",&id);
@@ -233,12 +241,23 @@ int main()
                 printf("\n");
 
             break;
+
+            //MOSTRAR LISTA
+            case 8:
+                listarPacientes(registros);
             default:
 
             break;
         }
-    }while(c!=8);
+    } while(c!=9);
 
     listarPacientes(registros);
+
+    //INSERIR GRAVAÇÃO EM ARQUIVO COM FUNÇÕES DE SAVELOAD.H AQUI
+    
+    filaApagar(fila_de_espera);
+    apagarLista(registros);
+    
+    printf("Saindo do sistema... Volte sempre!\n");
     return 0;
 }

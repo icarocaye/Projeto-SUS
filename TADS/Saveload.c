@@ -106,13 +106,14 @@ bool lerLista(FILE *fp, Lista *L)
     }
 
     //ler o tamanho da lista primeiro
-    if (fread(&(L->tamanho), sizeof(int), 1, fp) < 1) {
+    int tam;
+    if (fread(&tam, sizeof(int), 1, fp) < 1) {
         printf("Erro ao importar Lista!\n");
         return false;
     }
 
     //ler os nós (paciente + histórico), com base no tamanho da fila!
-    for (int i = 0; i < L->tamanho; i++) {
+    for (int i = 0; i < tam; i++) {
         Paciente *p = pacienteEmBranco();
         Pilha *h = pilhaCriar();
 
@@ -139,17 +140,19 @@ bool lerFila(FILE *fp, Lista *L, Fila*f)
         return false;
     }
     //ler o tamanho da fila primeiro
-    fread(&(f->tamanho), sizeof(int), 1, fp);
+    int n;
+    if (fread(&n, sizeof(int), 1, fp) < 1) return true; //Significa que não tem mais o que ler, e fila vazia é aceitável
 
-    if (f->tamanho > 0 && f->tamanho <= L->tamanho) {
+    if (n > 0 && n <= L->tamanho) {
         //caminha até o (tamanho - n)-ésimo registro
         Registro *aux = L->inicio;
-        for (int i = 0; i < L->tamanho - f->tamanho; i++)
+        for (int i = 0; i < L->tamanho - n; i++)
             aux = aux->prox;
 
-        //adiciona os últimos n registros na fila
+        //cria uma cópia dos n registros que serão da fila e depois adiciona-os
         while (aux != NULL) {
-            enfileirar(f, aux);
+            Registro *no_fila = RegistroCriar(aux->paciente, aux->historico);
+            enfileirar(f, no_fila);
             aux = aux->prox;
         }
     }
