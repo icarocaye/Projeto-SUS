@@ -20,7 +20,7 @@ Pilha *pilhaCriar();
 void pilhaApagar(Pilha *h);
 
 void empilhar(Pilha *h, char proc[MAX]);
-char* desempilhar(Pilha *h);
+bool desempilhar(Pilha *h);
 int pilhaSize(Pilha *h);
 bool pilhaVazia(Pilha *h);
 int pilhaTamanho(Pilha *h);

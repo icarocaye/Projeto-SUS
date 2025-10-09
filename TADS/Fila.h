@@ -15,10 +15,11 @@ typedef struct Fila {
 //funções de Fila
 
 Fila *filaCriar();
-void filaApagar(Fila *f);
+bool filaApagar(Fila *f);
 
 bool filaCheia(Fila *f);
 bool filaVazia(Fila *f);
+int filaTamanho(Fila *f);
 Registro* fila_inicio(Fila *f);
 void enfileirar(Fila *f, Registro *n);
 bool desenfileirar(Fila *f);

@@ -17,12 +17,12 @@ Código 3 - erro ao salvar um ponteiro.
 
 //funções para gravar no arquivo
 
-bool saveFila(FILE *f, Fila *);
 bool saveLista(FILE *f, Lista *l);
+bool saveFila(FILE *f, Fila *);
 
 //funções para ler um arquivo
 
-bool lerFila(FILE *f, Fila *);
 bool lerLista(FILE *f, Lista *l);
+bool lerFila(FILE *f, Lista *L, Fila *);
 
 #endif

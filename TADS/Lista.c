@@ -19,7 +19,9 @@ void apagarLista(Lista *l)
     Registro *r = l->inicio;
     while (r != NULL) {
         Registro *prox = r->prox;
-        free(r); // aqui você pode decidir se libera também paciente e histórico
+        pacienteApagar(r->paciente);
+        pilhaApagar(r->historico);
+        RegistroApagar(r);
         r = prox;
     }
     free(l);
@@ -108,7 +110,7 @@ bool listaRemover(int id, Lista *l)
     
     pacienteApagar(r->paciente);
     pilhaApagar(r->historico);
-    free(r); // libera o registro
+    RegistroApagar(r); // libera o registro
     l->tamanho--;
 
     return true;
@@ -118,19 +120,23 @@ bool listaRemover(int id, Lista *l)
 void listarPacientes(Lista *l)
 {   
     Registro *r = l->inicio;
+    printf("\n=============================================\n"
+           "             LISTA DE PACIENTES\n"
+           "=============================================\n");
     while(r!=NULL)
-    {
-        printf("\nPaciente (id=%d) \n ---------\n nome: %s  \n",
+    {   
+        printf("\nPaciente (id=%d) \n---------------------------------------------\nNome: %s  \n",
         r->paciente->id, r->paciente->nome);\
         Pilha *hist = r->historico;
         if(hist->tamanho>0){
-            printf("\nhistórico:\n");
+            printf("\nHistórico:\n");
             
             for(int i = 0;i<hist->tamanho;i++){
                 printf(" %d -- %s \n",i+1,hist->procedimentos[i]);
             }
         }else
-            printf("Paciente sem histórico");
+            printf("\nPaciente sem histórico\n");
+        printf("\n=============================================\n");
         r=r->prox;
     }
 
