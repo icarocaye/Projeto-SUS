@@ -13,9 +13,11 @@ int main()
     int c;
     Fila *fila_de_espera = filaCriar();
     Lista *registros = criarLista();
+    // Define o nome do arquivo que guardará os dados
+    const char* NOME_ARQUIVO = "prontosocorro.dat";
 
-    //INSERIR LEITURA DE ARQUIVO COM FUNÇÕES DE SAVELOAD.H AQUI
-    
+    // Carrega os dados salvos anteriormente ao iniciar o programa
+    saveload_carregar_dados(registros, fila_de_espera, NOME_ARQUIVO);
 
     printf("Olá, Bem-vindo ao sistema de gerenciamento de saúde!!\n");
     
@@ -253,7 +255,8 @@ int main()
 
     listarPacientes(registros);
 
-    //INSERIR GRAVAÇÃO EM ARQUIVO COM FUNÇÕES DE SAVELOAD.H AQUI
+    // Salva os dados no arquivo antes de encerrar o programa
+    saveload_salvar_dados(registros, fila_de_espera, NOME_ARQUIVO);
     
     filaApagar(fila_de_espera);
     apagarLista(registros);
