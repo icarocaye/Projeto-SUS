@@ -44,3 +44,42 @@ Os requisitos do projeto e descrição mais detalhada das ações podem ser enco
 
 ## Como rodar
 Abaixo seguem as instruções de como compilar e executar o código do projeto:  
+
+### Requisitos  
+- Estar em um sistema operacional Linux e ter instalado na máquina o compilador gcc
+- Ter baixado o arquivo .zip do projeto
+- Ter a função "unzip" instalada no Linux
+
+### Passos  
+1. Abra o terminal no diretório em que se localiza o arquivo .zip do projeto
+2. Digite o seguinte comando para extrair os arquivos: 
+
+```
+unzip Projeto-SUS.zip
+```
+
+3. Em caso de êxito, será extraído um diretório com o mesmo nome do projeto. Certifique-se de que você se encontra dentro desse diretoŕio para continuar:
+
+```
+cd Projeto-SUS.zip
+```
+
+4. Por fim, use os seguintes comandos de acordo com as suas funções:
+
+    Compilar o projeto e gerar os executáveis
+    
+    ```
+    make
+    ```
+    
+    Compilar e executar o projeto, ou somente executá-lo se já estiver compilado:
+    
+    ```
+    make run
+    ```
+    
+    Limpar a compilação anterior, excluíndo todos os arquivos executáveis:
+    
+    ```
+    make clean
+    ```
