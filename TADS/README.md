@@ -89,6 +89,7 @@ void filaApagar(Fila *f);
 
 bool filaCheia(Fila *f);
 bool filaVazia(Fila *f);
+int filaTamanho(Fila *f);
 Registro* fila_inicio(Fila *f);
 void enfileirar(Fila *f, Registro *n);
 bool desenfileirar(Fila *f);
@@ -97,6 +98,30 @@ void mostrar_fila(Fila *f);
 ```
 
 ## Lista
+Assim como a Fila, a Lista também foi implementada dinamicamente de forma encadeada, usando o TAD registro como nó. Mas é importante ressaltar: a Fila e a Lista não compartilham o mesmo registro, pois, apesar de apontarem para o mesmo paciente e histórico, não podem compartilhar as ligações entre nós, pois isso faria uma estrutura interferir na outra. Dessa forma, existem sempre dois registros (um da fila e um da lista) que apontam para o mesmo paciente e histórico. Diferentemente de fila, não há tamanho máximo para a Lista, que pode ser tão longa quanto a memória permitir. A estrutura da Lista é a seguinte:
+
+```c
+typedef struct Lista{
+    Registro *topo;
+    Registro *inicio;
+    int tamanho;
+}Lista;
+```
+
+As funções de Lista podem ser conferidas a seguir. Note que, assim como os outros TADs, existem funções de construção e destrução, funções para consulta/impressão de valores e as funcionalidades da estrutura fila, que permite inserir e remover em qualquer posição (nesse caso, só precisamos inserir no fim).
+
+```c
+Lista* criarLista();
+void apagarLista(Lista* l);
+
+void listaInserir(Registro *registro_paciente,Lista *l);
+bool listaRemover(int id, Lista *l);
+Paciente *buscarPaciente(int id, Lista *l);
+Registro *buscarRegistro(int id, Lista *l);
+
+void listarPacientes(Lista *l);
+bool listaVazia(Lista *l);
+```
 
 ## Saveload (IO)
 Por fim, temos o TAD que controla a leitura e a gravação das estruturas em arquivos. No projeto, chamamos esse TAD de Saveload, mas outro nome comum para ele seria IO(input/output). Diferentemente dos outros TADs, ele não possui uma estrutura própria, mas apenas funções para salvar as outras estruturas que já definimos.  
@@ -105,28 +130,24 @@ As funções públicas do TAD são apenas essas:
 
 ```c
 //funções para gravar no arquivo
-
-bool saveFila(FILE *f, Fila *);
-bool saveLista(FILE *f, Lista *l);
+/*
+As funções PRECISAM ser chamadas nessa ordem! Fila só pode ser salva depois de Lista.
+Ponteiro para arquivo deve ter sido criado no modo wb.
+*/
+bool saveLista(FILE *wb, Lista *l);
+bool saveFila(FILE *wb, Fila *);
 
 //funções para ler um arquivo
-
-bool lerFila(FILE *f, Fila *);
-bool lerLista(FILE *f, Lista *l);
-```
-
-No entanto, dentro da implementação foram definidas funções para salvar Paciente, Pilha e Registro, que forma utilizadas internamente nas funções públicas, de forma que essas estruturas ficam incluídas no salvamento e na leitura de Fila e Lista.  
-
-Por fim, também foram definidos códigos de erro, para ajudar a localizar a natureza e a estrutura à qual estão atrelados quaisquer eventuais problemas tanto no salvamento quanto na leitura, são eles:
-
-```c
 /*
-TRATAMENTO DE ERRO
-Em caso de erro, as funções retornam false e exibem uma mensagem de erro na tela, dizendo em qual estrutura 
-o erro se deu e o código dele, que segue esse dicionário:
-Código 0 - um dos ponteiros recebidos pela função é aponta para NULL e, portanto, não pode ser acessado.
-Código 1 - erro ao salvar um int.
-Código 2 - erro ao salvar um vetor.
-Código 3 - erro ao salvar um ponteiro.
+As funções PRECISAM ser chamadas nessa ordem! Fila só pode ser lida depois de Lista.
+Ponteiro para arquivo deve ter sido criado no modo rb.
 */
+bool lerLista(FILE *rb, Lista *l);
+bool lerFila(FILE *rb, Lista *L, Fila *);
 ```
+
+No entanto, dentro da implementação também foi definida uma função para salvar Paciente e seu histórico, que foi utilizadas internamente nas funções públicas, de forma que essas estruturas ficam incluídas no salvamento e na leitura de Fila e Lista.  
+
+Outro detalhe importante é que, como o registro da fila e o registro da lista apontam para o mesmo paciente, não podemos salvar os registros duas vezes, pois isso acaba duplicando o paciente e o histórico na memória. Para solucionar isso, a função de salvar Lista é que salva cada paciente e seu histórico de forma adjacente na memória. A função de salvar Fila, por sua vez, salva apenas o tamanho da fila, pois na hora de ler, faremos algo semelhante. Para ler do arquivo, a função de ler Lista é quem recolhe cada paciente e seu histórico e insere-os na fila. A função de ler Fila usa apenas o tamanho n da fila e lê os últimos n elementos da lista de pacientes (ela foi construída conforme a ordem de chegada, o que significa que os últimos pacientes são os que estavam na fila!) , criando registros diferentes para eles e inserindo-os na fila.  
+
+**Por esse motivo, é imprescindível que saveLista() e lerLista() sejam sempre chamadas antes de saveFila() e lerFila(), respectivamente.**
