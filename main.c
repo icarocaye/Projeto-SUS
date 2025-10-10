@@ -19,16 +19,16 @@ int main()
     // --- SEÇÃO DE CARREGAMENTO ---
     arquivo = fopen(NOME_ARQUIVO, "rb"); // Abre para leitura binária
     if (arquivo != NULL) {
-        printf("Carregando dados de %s...\n", NOME_ARQUIVO);
+        printf("\nCarregando dados de %s...\n", NOME_ARQUIVO);
         lerLista(arquivo, registros);
         lerFila(arquivo, registros, fila_de_espera);
         fclose(arquivo);
         printf("Dados carregados com sucesso!\n");
     } else {
-        printf("Arquivo de dados '%s' nao encontrado. Iniciando com sistema vazio.\n", NOME_ARQUIVO);
+        printf("\nArquivo de dados \"%s\" não encontrado. Iniciando com sistema vazio.\n", NOME_ARQUIVO);
     }
     
-    printf("Olá, Bem-vindo ao sistema de gerenciamento de saúde!!\n");
+    printf("Olá, Bem-vindo ao sistema de gerenciamento de saúde!\n");
     
    
     do{
@@ -262,8 +262,6 @@ int main()
         }
     } while(c!=9);
 
-    listarPacientes(registros);
-
     // --- SEÇÃO DE SALVAMENTO ---
     arquivo = fopen(NOME_ARQUIVO, "wb"); // Abre para escrita binária
     if (arquivo == NULL) {
@@ -279,6 +277,6 @@ int main()
     filaApagar(fila_de_espera);
     apagarLista(registros);
     
-    printf("Saindo do sistema... Volte sempre!\n");
+    printf("Saindo do sistema... Volte sempre!\n\n");
     return 0;
 }

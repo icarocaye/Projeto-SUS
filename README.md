@@ -1,5 +1,7 @@
 # Projeto SUS
-O projeto faz parte da disciplina de Algoritmos e Estruturas de Dados I, e consiste na elaboração de um sistema simples de atendimento médico por meio de tipos abstratos de dados (TADs).
+O projeto faz parte da disciplina de Algoritmos e Estruturas de Dados I, e consiste na elaboração de um sistema simples de atendimento médico por meio de tipos abstratos de dados (TADs).  
+
+Autores: [@icarocaye](https://github.com/icarocaye), [@NicMota](https://github.com/NicMota), [@RafaelMHS](https://github.com/RafaelMHS).
 
 ## Funcionalidades do Sistema
 O sistema consiste em dois armazenamentos principais: uma Lista com todos os pacientes que deram entrada no hospital e um Fila com os pacientes que entraram e ainda não foram atendidos. Para implementar essas estruturas, construímos um TAD de registro, que pode representar tanto um item da Lista quanto um item da Fila. Esse registro, por sua vez, aponta para o TAD Paciente (composto por id único e nome) e para o seu histórico de procedimentos, implementado como uma Pilha de strings e que pode ser manipulado. Mais informações sobre os TADs e suas implementações estão contidas em [Tipos Abstrados de Dados](TADS/README.md).  
@@ -47,7 +49,7 @@ Abaixo seguem as instruções de como compilar e executar o código do projeto:
 
 ### Requisitos  
 - Estar em um sistema operacional Linux e ter instalado na máquina o compilador gcc
-- Ter baixado o arquivo .zip do projeto
+- Baixar o arquivo .zip do projeto
 - Ter a função "unzip" instalada no Linux
 
 ### Passos  

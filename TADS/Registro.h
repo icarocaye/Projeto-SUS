@@ -19,7 +19,7 @@ typedef struct Registro{
 
 //funções de Paciente
 Paciente *pacienteEmBranco();
-Paciente *pacienteCriar(char *nome, int id);
+Paciente *pacienteCriar(char nome[NOME_MAX], int id);
 bool pacienteApagar(Paciente *p);
 
 //funções de Registro
