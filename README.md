@@ -34,7 +34,11 @@ Além disso, o sistema conta com as seguintes funcionalidades, que são acessív
     - Entrada: id do paciente em questão.
     - Resultado: imprime na tela todos os procedimentos contidos no histórico, do mais antigo para o mais recente.
 
-8. Sair do menu  
+8. Mostrar lista de pacientes  
+    - Entrada: nenhuma.
+    - Resultado: imprime na tela a lista de todos os pacientes não falecidos que já deram entrada no sistema.
+
+9. Sair do menu  
 
 Os requisitos do projeto e descrição mais detalhada das ações podem ser encontrados no [PDF de definição do projeto](proj1VersaoAtualizada.pdf)  
 
