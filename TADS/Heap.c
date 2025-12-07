@@ -115,23 +115,3 @@ void print(Heap *h)
         printf("%d",h->chaves[i].prioridade);
     }
 }
-
-int main()
-{
-    Heap *h = criarHeap(10);
-    Paciente *p0 = pacienteEmBranco();
-    Paciente *p1 = pacienteEmBranco();
-    Paciente *p2 = pacienteEmBranco();
-    chave* c1 = criarChave(5,p0);
-    chave* c2 = criarChave(6,p1);
-    chave* c3 = criarChave(4,NULL);
-    chave* c4 = criarChave(5,NULL);
-    chave* c5 = criarChave(7,NULL);
-    inserir(*c1,h);
-    inserir(*c2,h);
-    inserir(*c3,h);
-    inserir(*c4,h);
-    inserir(*c5,h);
-    remover(h);
-    print(h);
-}
