@@ -31,6 +31,7 @@ void apagarLista(Lista *l)
 bool listaVazia(Lista *l){
     return l->tamanho == 0;
 }
+
 //insere registro de paciente no fim da lista
 void listaInserir(Registro *registro_paciente, Lista *l){
     if(l== NULL)
