@@ -17,7 +17,11 @@ typedef struct Arvore{
 }Arvore;
 
 Arvore *criar_arvore();
-no criar_no(Registro *reg);
+bool apagar_arvore(Arvore *avl);
+
+no *criar_no(Registro *reg);
+bool apagar_no(no *n);
+
 int obter_fb(no *n);
 int obter_altura(no* n);
 void atualizar_altura(no *n);
@@ -26,10 +30,10 @@ no* rotacionar_direita(no *raiz);
 no* rotacionar_esquerda(no *raiz);
 no* rotacionar_esquerda_direita(no *raiz);
 no* rotacionar_direita_esquerda(no *raiz);
-bool inserir(Registro *novo_registro, Arvore *arvore);
-Registro *buscar(int id, no* raiz);
+bool arvore_inserir(Registro *novo_registro, Arvore *arvore);
+Registro *arvore_buscar(int id, no* raiz);
 no *balancear(no*raiz);
-void remover(int id, Arvore *arvore);
+void arvore_remover(int id, Arvore *arvore);
 
 
 

@@ -5,6 +5,7 @@
 
 typedef struct chave{
     int prioridade;
+    int chegada;
     Paciente* paciente;
 }chave;
 
@@ -17,10 +18,14 @@ typedef struct Heap{
 }Heap;
 
 Heap* criarHeap(int n);
-chave* criarChave(int prioridade, Paciente *paciente);
+bool apagarHeap(Heap *h);
+
+chave* criarChave(int prioridade, int chegada, Paciente *paciente);
+bool apagarChave(chave *c);
+
 int maiorFilho(int r, chave* chaves, int pos);
-bool inserir(chave p,Heap *heap);
-bool remover(Heap *heap);
+bool heap_inserir(chave *p, Heap *heap);
+Paciente *heap_remover(Heap *heap);
 chave proximo(Heap *heap);
 bool esta_cheia(Heap *heap);
 bool esta_vazia(Heap *heap);
@@ -29,5 +34,6 @@ chave topo(Heap *heap);
 void organizar_heap_cima(int pos, Heap *heap);
 void organizar_heap_baixo(int pos, Heap *heap);
 
+void print_heap(Heap *h);
 
 #endif

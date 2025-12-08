@@ -21,7 +21,7 @@ Paciente *pacienteCriar(char nome[NOME_MAX], int id) {
     
     strcpy(p->nome,nome);
     p->id = id;
-
+    p->na_fila = false;
     return p;
 }
 
@@ -50,6 +50,13 @@ Registro *RegistroCriar(Paciente *paciente, Pilha *historico)
 bool RegistroApagar(Registro *n) {
     if (n == NULL) false;
 
+    free(n);
+    return true;
+}
+
+bool RegistroApagarSemDados(Registro *n) {
+    if (n == NULL) return false;
+    // Não libera paciente nem historico, apenas o registro
     free(n);
     return true;
 }

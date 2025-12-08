@@ -6,6 +6,7 @@
 typedef struct {
     int id;
     char nome[NOME_MAX];
+    bool na_fila; //controle se o paciente está na fila
 } Paciente;
 
 //Estrutura de registro da lista/fila de pacientes
@@ -25,6 +26,7 @@ bool pacienteApagar(Paciente *p);
 //funções de Registro
 
 Registro *RegistroCriar(Paciente *p, Pilha *hist);
-bool RegistroApagar(struct Registro *n);
+bool RegistroApagar(Registro *n);
+bool RegistroApagarSemDados(Registro *n);
 
 #endif

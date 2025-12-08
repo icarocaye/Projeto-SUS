@@ -17,29 +17,49 @@ Heap *criarHeap(int n){
     return h;
 }
 
-chave* criarChave(int p, Paciente *pac)
+chave *criarChave(int p, int c, Paciente *pac)
 {
     chave* chave = malloc(sizeof(chave));
     if(chave==NULL)
         return NULL;
     chave->prioridade = p;
+    chave->chegada = c;
     chave->paciente = pac;
     return chave;
 }
 
-int maiorFilho(int r, chave* c, int pos)
+bool apagarChave(chave *c)
+{
+    free(c);
+    return true;
+}
+
+bool apagarHeap(Heap *h)
+{
+    if (h == NULL) return false;
+    free(h->chaves);
+    free(h);
+    return true;
+}
+
+int menorFilho(int r, chave* c, int pos)
 {
     int fe = 2*r +1;
     int fd = 2*r +2;
-    if(fd<pos)
-    {
-        return c[fe].prioridade> c[fd].prioridade ? fe : fd;
+    if (fd < pos) {
+        if (c[fe].prioridade == c[fd].prioridade) {
+            return c[fe].chegada < c[fd].chegada ? fe : fd;
+        }
+        else
+        {
+            return c[fe].prioridade < c[fd].prioridade ? fe : fd;
+        }
     }
     return fe;
 }
 bool esta_cheia(Heap* h)
 {
-    return h->pos==h->max;
+    return h->pos == h->max;
 }
 bool esta_vazia(Heap *h)
 {
@@ -57,37 +77,63 @@ void organizar_heap_cima(int n,Heap *h)
         return;
     int pai = (n-1)/2;
     
-    if(h->chaves[pai].prioridade < h->chaves[n].prioridade)
-    {
-        troca(h,pai,n);
-        organizar_heap_cima(pai,h);
+        bool deve_trocar = false;
+    
+    if(h->chaves[pai].prioridade > h->chaves[n].prioridade) {
+        // Filho tem maior prioridade (número menor)
+        deve_trocar = true;
+    } 
+    else if(h->chaves[pai].prioridade == h->chaves[n].prioridade) {
+        // Mesma prioridade: verificar ordem de chegada
+        if(h->chaves[pai].chegada > h->chaves[n].chegada) {
+            deve_trocar = true;
+        }
     }
-   
-}   
+    
+    if(deve_trocar) {
+        troca(h, pai, n);
+        organizar_heap_cima(pai, h);
+    }
+    return;
+}
+
 void organizar_heap_baixo(int r,Heap *h)
 {   
    
     if((2*r + 1)<h->pos)
     {
-        int mf = maiorFilho(r,h->chaves, h->pos);
-        if(h->chaves[r].prioridade < h->chaves[mf].prioridade)
-        {
-            troca(h,mf,r);
-            organizar_heap_baixo(mf,h);
+        int mf = menorFilho(r,h->chaves, h->pos);
+        bool deve_trocar = false;
+    
+        if(h->chaves[r].prioridade > h->chaves[mf].prioridade) {
+            // Filho tem maior prioridade (número menor)
+            deve_trocar = true;
+        }
+        else if(h->chaves[r].prioridade == h->chaves[mf].prioridade) {
+            // Mesma prioridade: verificar ordem de chegada
+            if(h->chaves[r].chegada > h->chaves[mf].chegada) {
+                deve_trocar = true;
+            }
+        }
+        
+        if(deve_trocar) {
+            troca(h, mf, r);
+            organizar_heap_baixo(mf, h);
         }
     }
    
 }
-bool inserir(chave c, Heap *h)
+bool heap_inserir(chave *c, Heap *h)
 {
     if(esta_cheia(h))
         return false;
 
-    h->chaves[h->pos] = c;
+    h->chaves[h->pos] = *c;
+    c->paciente->na_fila = true;
     
     organizar_heap_cima(h->pos,h);
     h->pos++;
-    return true;            
+    return true;
     
     
 }
@@ -95,23 +141,23 @@ chave topo(Heap *h){
     return h->chaves[0];
 }
 
-bool remover(Heap *h)
+Paciente *heap_remover(Heap *h)
 {
     if(esta_vazia(h))
-        return false;
-
+        return NULL;
+    Paciente *removido = h->chaves[0].paciente;
     h->pos--;
     h->chaves[0] = h->chaves[h->pos];
 
     if(h->pos>0)
         organizar_heap_baixo(0,h);
-    return true;
+    return removido;
     
 }
-void print(Heap *h)
+void print_heap(Heap *h)
 {
     for(int i = 0; i<h->pos; i++)
     {
-        printf("%d",h->chaves[i].prioridade);
+        printf("\nPrioridade: %d\nNome: %s\nID: %d\n",h->chaves[i].prioridade, h->chaves[i].paciente->nome, h->chaves[i].paciente->id);
     }
 }
