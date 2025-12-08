@@ -151,6 +151,8 @@ Paciente *heap_remover(Heap *h)
 
     if(h->pos>0)
         organizar_heap_baixo(0,h);
+
+    removido->na_fila = false;
     return removido;
     
 }
