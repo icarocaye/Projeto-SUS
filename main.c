@@ -43,8 +43,7 @@ int main() {
     FILE *arquivo = fopen("hospital.dat", "rb");
     if (arquivo != NULL) {
         printf("Carregando dados anteriores...\n");
-        if (lerArvore(arquivo, cadastro_geral) && 
-            lerHeap(arquivo, cadastro_geral, fila_de_espera, &global_chegada)) {
+        if (lerArvore(arquivo, cadastro_geral) && lerHeap(arquivo, cadastro_geral, fila_de_espera, &global_chegada)) {
             printf("Dados carregados com sucesso!\n");
         } else {
             printf("Erro ao carregar dados. Iniciando sistema vazio.\n");
