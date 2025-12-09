@@ -1,7 +1,7 @@
 # Estrutura e implementação dos TADs
 Este documento tem como intuito apresentar a estrutura e as funcionalidades de cada tipo abstrato de dados (TAD) utilizado neste projeto. Os detalhes sobre a interface do sistema e o funcionamento do programa principal estão contidos em [Projeto SUS](../README.md).  
 
-Apesar de todos os TADs serem acessíveis à main.c (decisão que foi feita para generalizar a aplicação deles no sistema), as estruturas mais utilizadas diretamente são [Histórico (Pilha)](Pilha.h), [Fila](Fila.h) e [Lista](Lista.h). De qualquer forma, vamos descrever cada um dos TADs, começando pelos mais fundamentais, que são incorporados em TADs posteriores, como os que acabaram de ser mencionados.  
+Apesar de todos os TADs serem acessíveis à main.c (decisão que foi feita para generalizar a aplicação deles no sistema), as estruturas mais utilizadas diretamente são [Histórico (Pilha)](Pilha.h), [Heap](Heap.h) e [Árvore AVL](Arvore.h). Os TADs [Fila](Fila.h) e [Lista](Lista.h) foram usados na primeira versão do projeto, que não contava com otimização da complexidade das operações, mas foram mantidos no repositório apesar de não serem mais utilizados no sistema como forma de registro da versão anterior. De qualquer forma, vamos descrever cada um dos TADs, começando pelos mais fundamentais, que são incorporados em TADs posteriores, como os que acabaram de ser mencionados.  
 
 ## Paciente
 Paciente é um dos dois TADs fundamentais do projeto, aqueles que serão incorporados em outros TADs e, portanto, precisam estar em ordem para permitir o funcionamento deles.  
@@ -47,7 +47,7 @@ int pilhaTamanho(Pilha *h);
 ```
 
 ## Registro (nó)
-Registro é o primeiro TAD composto por outros. Ele funciona como nó tanto da Fila quanto da Lista e seu intuito é apontar para um paciente e para um histórico, que passa a ser associado a ele. Sua estrutura também inclui um ponteiro para o próximo registro da estrutura em que estiver inserido:
+Registro é o primeiro TAD composto por outros. Ele funcionava como nó tanto da Fila quanto da Lista e seu intuito é apontar para um paciente e para um histórico, que passa a ser associado a ele. Na versão otimizada do sistema, ele serve para ligar o paciente ao seu histórico e compõe o nó da AVL. Sua estrutura também inclui um ponteiro para um próximo registro, que é remanescente das estruturas anteriores de Fila e Lista, mas não contribui para a Heap e a AVL.
 
 ```c
 typedef struct Registro {
@@ -57,16 +57,21 @@ typedef struct Registro {
 } Registro;
 ```
 
-Ele aponta ao invés de armazenar cruamente esses valores pois cada paciente + histórico precisa de dois registros: um para a Fila e outro para a Lista, para que não haja conflito entre as duas estruturas. Nesse caso, como esses dois registros apontam para o mesmo paciente e histórico, não precisamos duplicá-los na memória.  
+Ele aponta ao invés de armazenar cruamente esses valores pois cada paciente + histórico precisa de dois registros: um para a Heap (que, na verdade, é dado pela struct chave) e outro para a Árvore, para que não haja conflito entre as duas estruturas. Nesse caso, como esses dois registros apontam para o mesmo paciente e histórico, não precisamos duplicá-los na memória.  
 
-Por ser usado apenas como um nó, as funções do Registro são simples, somente para criar e apagar.
+Por ser usado apenas como um nó, as funções do Registro são simples, somente para criar, apagar e apagar sem deletar o paciente e o histórico contidos nele (para segurança de memória).
 
 ```c
 Registro *criarRegistro(Paciente *paciente, Pilha *historico);
 void apagarRegistro(Registro *registro);
+void apagarRegistroSemDados(Registro *registro);
 ```
 
-## Fila
+## Heap (Fila de prioridade)
+
+## Árvore AVL
+
+## Fila (DESATIVADO)
 A Fila foi implementada dinamicamente de forma encadeada, usando o TAD Registro como nó. Por isso, não possui de fato um tamanho máximo, e poderia ser expandida até o esgotamento da memória. No entanto, como a proposta do projeto pede que a fila tenha um tamanho finito, foi definido um tamanho máximo de 150 e uma função filaCheia(), que verifica se esse tamanho foi atingido. Dessa forma, a estutura da fila se configura da seguinte forma:
 
 ```c
@@ -97,7 +102,7 @@ Registro *filaBuscar(Fila *f, int id);
 void mostrar_fila(Fila *f);
 ```
 
-## Lista
+## Lista (DESATIVADO)
 Assim como a Fila, a Lista também foi implementada dinamicamente de forma encadeada, usando o TAD registro como nó. Mas é importante ressaltar: a Fila e a Lista não compartilham o mesmo registro, pois, apesar de apontarem para o mesmo paciente e histórico, não podem compartilhar as ligações entre nós, pois isso faria uma estrutura interferir na outra. Dessa forma, existem sempre dois registros (um da fila e um da lista) que apontam para o mesmo paciente e histórico. Diferentemente de fila, não há tamanho máximo para a Lista, que pode ser tão longa quanto a memória permitir. A estrutura da Lista é a seguinte:
 
 ```c
