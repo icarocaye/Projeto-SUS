@@ -24,7 +24,7 @@ void pacienteApagar(Paciente *p);
 
 OBS: por praticidade, o TAD Paciente foi incluído em [Registro.h](Registro.h), pois é usado somente nele.
 
-## Pilha
+## Pilha (Histórico)
 Pilha representa o histórico de procedimentos de um paciente. Assim como Paciente, ele também será incroporado nos próximos TADs, no entanto, ele também será acessado diretamente pelo cliente para adicionar e remover procedimentos. A Pilha guarda até 10 procedimentos por meio de um vetor de strings (essencialmente, uma matriz de chars) e a quantidade de procedimentos que contém, sua estrutura é a seguinte:
 
 ```c
@@ -68,6 +68,54 @@ void apagarRegistroSemDados(Registro *registro);
 ```
 
 ## Heap (Fila de prioridade)
+Na versão otimizada do projeto (o estado atual), a fila de atendimento segue um critério de prioridade de 1 a 5 (1 - mais urgente; 5 - menos urgente) para colocar os pacientes com casos mais graves na frente. Em caso de empate no critério de prioridade, ela deve levar em conta o tempo de chegada. A intenção de substituir a estrutura de fila linear por uma heap mínima é possibilitar o uso dos índices de prioridade mantendo uma complexidade satisfatória para as operações de inserção e remoção (O(n log n)).
+
+Como a heap deve levar em conta tanto o critério de prioridade quanto o de tempo de chegada (somente em casos de empate do primeiro), o nó da heap (que decidimos chamar de chave) tem a seguinte estrutura:
+
+```c
+typedef struct chave {
+    int prioridade;
+    int chegada;
+    Paciente* paciente;
+} chave;
+```
+
+A estrutura da heap, por sua vez, consiste em um vetor de chaves, alocado na criação com um tamanho fixo, bem como o índice da próxima posição livre e o seu tamanho máximo.
+
+```c
+typedef struct Heap {
+    chave *chaves;
+    int pos;
+    int max;
+} Heap;
+```
+
+As principais funções ("públicas") da heap usadas no programa principal são:
+
+```c
+Heap* criarHeap(int n);
+bool apagarHeap(Heap *h);
+
+chave* criarChave(int prioridade, int chegada, Paciente *paciente);
+bool apagarChave(chave *c);
+
+bool heap_inserir(chave *p, Heap *heap);
+chave heap_remover(Heap *heap);
+chave topo(Heap *heap);
+void print_heap(Heap *h);
+```
+
+No entanto, o TAD também conta com inúmeras funções auxiliares, como
+
+```c
+int maiorFilho(int r, chave* chaves, int pos);
+chave proximo(Heap *heap);
+bool esta_cheia(Heap *heap);
+bool esta_vazia(Heap *heap);
+void troca(Heap *heap,int i, int j);
+void organizar_heap_cima(int pos, Heap *heap);
+void organizar_heap_baixo(int pos, Heap *heap);
+```
 
 ## Árvore AVL
 
