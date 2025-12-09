@@ -8,6 +8,7 @@
 #include "TADS/Heap.h"   // Substitui Fila.h (Prioridade)
 #include "TADS/Arvore.h" // Substitui Lista.h (Eficiência)
 #include "TADS/Registro.h"
+#include "TADS/Saveload.h"
 
 // Variável de controle da ordem de chegada
 int global_chegada = 0;
@@ -37,6 +38,19 @@ int main() {
     // Inicialização das estruturas P2
     Heap *fila_de_espera = criarHeap(150);
     Arvore *cadastro_geral = criar_arvore();
+
+    // Tentar carregar dados salvos
+    FILE *arquivo = fopen("hospital.dat", "rb");
+    if (arquivo != NULL) {
+        printf("Carregando dados anteriores...\n");
+        if (lerArvore(arquivo, cadastro_geral) && 
+            lerHeap(arquivo, cadastro_geral, fila_de_espera, &global_chegada)) {
+            printf("Dados carregados com sucesso!\n");
+        } else {
+            printf("Erro ao carregar dados. Iniciando sistema vazio.\n");
+        }
+        fclose(arquivo);
+    }
 
     int opcao;
     int id_temp;
@@ -198,14 +212,14 @@ int main() {
 
             // --- CHAMAR PACIENTE (Heap) ---
             case 5:
-                Paciente *atendido = heap_remover(fila_de_espera);
+                chave atendido = heap_remover(fila_de_espera);
                 
-                if(atendido != NULL) {
+                if(atendido.paciente != NULL) {
                     printf("\n*** CHAMANDO PACIENTE ***\n");
-                    printf("Nome: %s (ID: %d)\n", atendido->nome, atendido->id);
+                    printf("Nome: %s (ID: %d)\n", atendido.paciente->nome, atendido.paciente->id);
                     
                     // Atualiza flag na árvore
-                    atendido->na_fila = false;
+                    atendido.paciente->na_fila = false;
                 } else {
                     printf("\n!!! FILA DE ESPERA VAZIA !!!\n");
                 }
@@ -248,7 +262,18 @@ int main() {
 
             case 9:
                 printf("Encerrando e salvando dados...\n");
-                // salvar_tudo(...);
+                // Salvar dados
+                FILE *arquivo = fopen("hospital.dat", "wb");
+                if (arquivo != NULL) {
+                    if (saveArvore(arquivo, cadastro_geral) && saveHeap(arquivo, fila_de_espera)) {
+                        printf("Dados salvos com sucesso!\n");
+                    } else {
+                        printf("Erro ao salvar dados!\n");
+                    }
+                    fclose(arquivo);
+                } else {
+                    printf("Erro ao criar arquivo de salvamento!\n");
+                }
                 break;
 
             default:

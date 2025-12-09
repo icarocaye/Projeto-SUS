@@ -141,25 +141,39 @@ chave topo(Heap *h){
     return h->chaves[0];
 }
 
-Paciente *heap_remover(Heap *h)
+chave heap_remover(Heap *h)
 {
+    chave vazia = {0, 0, NULL}; //em caso de erro
     if(esta_vazia(h))
-        return NULL;
-    Paciente *removido = h->chaves[0].paciente;
+        return vazia;
+    chave removido = h->chaves[0];
     h->pos--;
     h->chaves[0] = h->chaves[h->pos];
 
     if(h->pos>0)
         organizar_heap_baixo(0,h);
 
-    removido->na_fila = false;
+    removido.paciente->na_fila = false;
     return removido;
-    
 }
+
+Heap *copiar_heap(Heap *h) {
+    Heap *copia = criarHeap(h->max);
+    for (int i = 0; i < h->pos; i++) {
+        copia->chaves[i] = h->chaves[i];
+    }
+    copia->pos = h->pos;
+
+    return copia;
+}
+
 void print_heap(Heap *h)
 {
+    Heap *tmp = copiar_heap(h); chave item;
     for(int i = 0; i<h->pos; i++)
     {
-        printf("\nPrioridade: %d\nNome: %s\nID: %d\n",h->chaves[i].prioridade, h->chaves[i].paciente->nome, h->chaves[i].paciente->id);
+        item = heap_remover(tmp);
+        printf("\nPrioridade: %d\nNome: %s\nID: %d\n",item.prioridade, item.paciente->nome, item.paciente->id);
     }
+    apagarHeap(tmp);
 }

@@ -25,7 +25,7 @@ bool apagarChave(chave *c);
 
 int maiorFilho(int r, chave* chaves, int pos);
 bool heap_inserir(chave *p, Heap *heap);
-Paciente *heap_remover(Heap *heap);
+chave heap_remover(Heap *heap);
 chave proximo(Heap *heap);
 bool esta_cheia(Heap *heap);
 bool esta_vazia(Heap *heap);
