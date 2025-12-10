@@ -118,6 +118,56 @@ void organizar_heap_baixo(int pos, Heap *heap);
 ```
 
 ## Árvore AVL
+Na versão otimizada do projeto (o estado atual), a Árvore AVL é usada para manter os registros permanentes dos pacientes do hospital. Ela foi implementada no lugar da lista encadeada para melhorar a complexidade da busca baseada em id, que antes era linear e agora passar a ser O(log n).
+
+Para não alterar a estrutura do Registro, ele foi incluído numa struct nó, que liga ele aos filhos da esquerda e da direita, e também guarda sua altura e seu fator de balanceamento (FB)
+
+```c
+typedef struct no {
+    Registro *dados;
+    struct no *esq;
+    struct no *dir;
+    int altura;
+    int fb;
+} no;
+```
+
+A estrutura da Árvore, por sua vez, só precisa apontar para o nó raiz e guardar a sua profundidade (que, no caso da árvore binária, também é igual à sua altura total).
+
+```c
+typedef struct Arvore{
+    no *raiz;
+    int profundidade;
+}Arvore;
+```
+
+As funções ("públicas") utilizadas no programa principal buscam abstrair o funcionamento da AVL e focar na utilidade dela para o sistema. Dessa forma, elas são
+
+```c
+Arvore *criar_arvore();
+bool apagar_arvore(Arvore *avl);
+
+no *criar_no(Registro *reg);
+bool apagar_no(no *n);
+
+void em_ordem(no *raiz);
+bool arvore_inserir(Registro *novo_registro, Arvore *arvore);
+Registro *arvore_buscar(int id, no* raiz);
+void arvore_remover(int id, Arvore *arvore);
+```
+
+As funções auxiliares da Árvore AVL envolvem, em sua maioria, o processo do balanceamento, são elas
+
+```c
+int obter_fb(no *n);
+int obter_altura(no* n);
+void atualizar_altura(no *n);
+no* rotacionar_direita(no *raiz);
+no* rotacionar_esquerda(no *raiz);
+no* rotacionar_esquerda_direita(no *raiz);
+no* rotacionar_direita_esquerda(no *raiz);
+no *balancear(no*raiz);
+```
 
 ## Fila (DESATIVADO)
 A Fila foi implementada dinamicamente de forma encadeada, usando o TAD Registro como nó. Por isso, não possui de fato um tamanho máximo, e poderia ser expandida até o esgotamento da memória. No entanto, como a proposta do projeto pede que a fila tenha um tamanho finito, foi definido um tamanho máximo de 150 e uma função filaCheia(), que verifica se esse tamanho foi atingido. Dessa forma, a estutura da fila se configura da seguinte forma:
@@ -184,23 +234,24 @@ As funções públicas do TAD são apenas essas:
 ```c
 //funções para gravar no arquivo
 /*
-As funções PRECISAM ser chamadas nessa ordem! Fila só pode ser salva depois de Lista.
+As funções PRECISAM ser chamadas nessa ordem! Heap só pode ser salva depois de Arvore.
 Ponteiro para arquivo deve ter sido criado no modo wb.
 */
-bool saveLista(FILE *wb, Lista *l);
-bool saveFila(FILE *wb, Fila *);
+bool saveArvore(FILE *wb, Arvore *a);
+bool saveHeap(FILE *wb, Heap *h);
 
 //funções para ler um arquivo
 /*
-As funções PRECISAM ser chamadas nessa ordem! Fila só pode ser lida depois de Lista.
+As funções PRECISAM ser chamadas nessa ordem! Heap só pode ser lida depois de Arvore.
 Ponteiro para arquivo deve ter sido criado no modo rb.
 */
-bool lerLista(FILE *rb, Lista *l);
-bool lerFila(FILE *rb, Lista *L, Fila *);
+bool lerArvore(FILE *rb, Arvore *l);
+bool lerHeap(FILE *rb, Arvore *a, Heap *h, int *global_chegada);
 ```
 
-No entanto, dentro da implementação também foi definida uma função para salvar Paciente e seu histórico, que foi utilizadas internamente nas funções públicas, de forma que essas estruturas ficam incluídas no salvamento e na leitura de Fila e Lista.  
+No entanto, dentro da implementação também foi definida uma função para salvar Paciente e seu histórico, que foi utilizadas internamente nas funções públicas, de forma que essas estruturas ficam incluídas no salvamento e na leitura de Heap e Arvore. Além disso, foram usadas funções auxiliares recursivas para salvar e ler a Árvore AVL. 
 
-Outro detalhe importante é que, como o registro da fila e o registro da lista apontam para o mesmo paciente, não podemos salvar os registros duas vezes, pois isso acaba duplicando o paciente e o histórico na memória. Para solucionar isso, a função de salvar Lista é que salva cada paciente e seu histórico de forma adjacente na memória. A função de salvar Fila, por sua vez, salva apenas o tamanho da fila, pois na hora de ler, faremos algo semelhante. Para ler do arquivo, a função de ler Lista é quem recolhe cada paciente e seu histórico e insere-os na fila. A função de ler Fila usa apenas o tamanho n da fila e lê os últimos n elementos da lista de pacientes (ela foi construída conforme a ordem de chegada, o que significa que os últimos pacientes são os que estavam na fila!) , criando registros diferentes para eles e inserindo-os na fila.  
+Outro detalhe importante é que, **na versão antiga do projeto (que usava os TADs Fila e Lista)**, como o registro da fila e o registro da lista apontam para o mesmo paciente, não podemos salvar os registros duas vezes, pois isso acaba duplicando o paciente e o histórico na memória. Para solucionar isso, a função de salvar Lista é que salva cada paciente e seu histórico de forma adjacente na memória. A função de salvar Fila, por sua vez, salva apenas o tamanho da fila, pois na hora de ler, faremos algo semelhante. Para ler do arquivo, a função de ler Lista é quem recolhe cada paciente e seu histórico e insere-os na fila. A função de ler Fila usa apenas o tamanho n da fila e lê os últimos n elementos da lista de pacientes (ela foi construída conforme a ordem de chegada, o que significa que os últimos pacientes são os que estavam na fila!) , criando registros diferentes para eles e inserindo-os na fila.  
 
-**Por esse motivo, é imprescindível que saveLista() e lerLista() sejam sempre chamadas antes de saveFila() e lerFila(), respectivamente.**
+**Por esse motivo, era imprescindível que saveLista() e lerLista() sejam sempre chamadas antes de saveFila() e lerFila(), respectivamente.**
+**De modo similar, é imprescindível que saveArvore() e lerArvore() sejam sempre chamadas antes de saveHeap() e lerHeap(), respectivamente.**
